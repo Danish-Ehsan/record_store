@@ -30,9 +30,8 @@ function getFeatured() {
         $statement->closeCursor();
         return $result;
     } catch (PDOException $e) {
-        $errors = array('errorMessage' => $e->getMessage(), 'errorCode' => $e->getCode());
-        $result = array('errors' => $errors);
-        return $result;
+        $error_message = $e->getMessage();
+        echo $error_message;
         exit();
     }
 }

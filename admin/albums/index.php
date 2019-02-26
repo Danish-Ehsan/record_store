@@ -27,12 +27,6 @@ switch ($action) {
     
     case 'viewFeatured':
         $albums = getFeatured();
-        if (isset($albums['errors'])) {
-            $error = $albums['errors'];
-            include ('admin/errors/admin_display_error.php');
-            include ('admin/view/footer.php');
-            exit();
-        }
         include('admin/albums/admin_view_featured.php');
         break;
     
