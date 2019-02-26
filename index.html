@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Record Shack</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="icon" type="image/png" href="images/rs_favicon.png">
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"
+	  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+	  crossorigin="anonymous">
+	</script>
+	<script type="text/javascript" src="js/vue.js"></script>
+</head>
+<body>
+	<div id="container">
+		<div id="vueApp">
+			<div id="nav-cont">
+				<div v-on:click="toggleNav" id="nav-button">Menu</div>
+				<div v-bind:class="{ active: appSettings.showNav }" id="nav-menu">
+					<div id="nav-logo"><img src="images/rstore_logo_red.png"></div>
+					<ul>
+						<li><a href="#" v-on:click.prevent="loadHome">Home</a></li>
+						<li><a href="#" v-on:click.prevent="loadAllAlbums">Ablums</a></li>
+						<li><a href="#" v-on:click.prevent="loadArtists">Artists</a></li>
+						<li><a href="#" v-on:click.prevent="loadCustomerLogin">User</a></li>
+						<li><a href="#">Random</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div id="user-cont">
+				<a id="user-cart-cont" href="#" v-on:click.prevent="loadCustomerCart">
+					<transition name="cart-slide-down" mode="out-in">
+						<div id="user-cart-icon" v-if="customer.cart.length">
+							<img v-if="!appSettings.showNav" src="images/rstore_icon_cart.png">
+							<img v-else src="images/rstore_icon_cart_alt.png">
+						</div>
+					</transition>
+					<transition name="cart-slide-down" mode="out-in">
+						<div 
+							id="user-cart-quantity-cont"
+							v-bind:class="{ dark: appSettings.showNav }"
+							v-if="customer.cart.length"
+							v-bind:key="totalCartQuantity"
+						>
+							<div id="cart-quantity">{{ totalCartQuantity }}</div>
+						</div>
+					</transition>
+				</a>
+				<div id="user-name">
+					<transition name="cart-slide-down" mode="out-in">
+						<a href="#" v-if="!customer.loggedIn" v-on:click.prevent="loadCustomerLogin" key="notLoggedIn">User Login</a>
+						<a href="#" v-else="customer.loggedIn" v-on:click.prevent="loadCustomerHome" key="loggedIn">Hello, {{ customer.details.firstName }}</a>
+					</transition>
+					<img v-if="!appSettings.showNav" src="images/yellow_arrow.png">
+					<img v-else src="images/yellow_arrow_alt.png">
+				</div>
+			</div>
+
+			<div id="left-panel" v-bind:class="{ closed: appSettings.leftPanelView == 'none', narrow: appSettings.leftPanelView == 'userMenu' }">
+				<left-album-covers 
+					v-show="appSettings.leftPanelView == 'albumCovers'" 
+					v-bind:albums="albums"
+					v-bind:app-settings="appSettings"
+					v-bind:key="appSettings.pageTitle"
+				inline-template>
+					<transition name="slide-left-delay">
+						<div class="left-album-covers">
+							<div v-if="appSettings.showLeftLogo" id="logo">
+								<img src="images/rstore_logo.png">
+							</div>
+							<div v-for='album in albums' class="album-image-cont" v-on:click="toggleInfo">
+								<img class="album-image" v-bind:src="album.image">
+							</div>
+						</div>
+					</transition>
+				</left-album-covers>
+				<left-user-menu
+					v-if="appSettings.leftPanelView == 'userMenu'"
+				inline-template>
+					<transition name="slide-left-delay">
+						<div id="user-menu-cont">
+							<ul id="user-menu">
+								<li><a href="#" v-on:click.prevent="loadUserCart">My Cart</a></li>
+								<li><a href="#" v-on:click.prevent="loadUserOrders">My Orders</a></li>
+								<li><a href="#" v-on:click.prevent="loadEditUser">Edit account</a></li>
+								<li><a href="#" v-on:click.prevent="logout">Logout</a></li>
+							</ul>
+						</div>
+					</transition>
+				</left-user-menu>
+			</div><!--#left-panel-->
+			
+			<div id="right-panel" v-bind:class="{ open: appSettings.leftPanelView == 'none', wide: appSettings.rightPanelView == 'customerAccount' }">
+				<transition name="slide-delay" mode="out-in">
+					<right-album-info 
+						v-if="appSettings.rightPanelView == 'albums'" 
+						v-bind:albums="albums"
+						v-bind:app-settings="appSettings"
+						v-bind:formatted-price="formattedPrice"
+					inline-template>
+						
+							<div class="right-album-info">
+								<div class="home-page-title">{{ appSettings.pageTitle }}</div>
+								<transition name="slide" mode="out-in">
+									<div v-if="appSettings.showRightLogo" id="store-name">
+										<img src="images/rstore_title.png" alt="Record Shack: Curated Rock Music Collection">
+									</div>
+								
+									<div 
+										v-if="!appSettings.showRightLogo" 
+										class="album-info"
+										v-bind:key="albums[appSettings.currentAlbum].albumName"
+									>
+										<p id="artist-name" v-on:click="toggleInfo">{{ albums[appSettings.currentAlbum].artistName }}</p>
+										<p id="album-name" v-on:click="toggleInfo">{{ albums[appSettings.currentAlbum].albumName }}<img class="yellow-arrow" src="images/yellow_arrow.png"></p>
+										<div class="more-info" v-bind:class="{ active: appSettings.showInfo }">
+											<p class="price">{{ formattedPrice }}</p>
+											<button class="cart-button" v-on:click="addToCart">Add to Cart</button>
+											<ol class="tracklist">
+												<li v-for="song in albums[appSettings.currentAlbum].songs" class="tracklist-song"><span>{{ song }}</span></li>
+											</ol>
+										</div>
+									</div>
+								</transition>
+							</div>
+					</right-album-info>
+
+					<right-artists-list
+						v-if="appSettings.rightPanelView == 'artistsList'"
+						v-bind:artists="artists"
+						v-bind:page-title="appSettings.pageTitle"
+					inline-template>
+							<div id="right-artists-list">
+								<transition appear name="slide-up-title">
+									<div class="page-title">
+										{{ pageTitle }}
+									</div>
+								</transition>
+								<div id="artist-lists">
+									<ul id="artists-first-colmn">
+										<li 
+											v-for="artist in artistsFirstColmn"
+											v-on:click="loadArtistCatalog( artist.artistID )"
+										>{{ artist.artistName }}</li>
+									</ul>
+									<ul id="artists-second-colmn">
+										<li 
+											v-for="artist in artistsSecondColmn"
+											v-on:click="loadArtistCatalog( artist.artistID )"
+										>{{ artist.artistName }}</li>
+									</ul>
+								</div>
+							</div>
+					</right-artists-list>
+
+					<right-albums-list
+						v-if="appSettings.rightPanelView == 'albumsList'"
+						v-bind:albums="albums"
+						v-bind:page-title="appSettings.pageTitle"
+					inline-template>
+							<div id="right-albums-list">
+								<transition appear name="slide-up-title">
+									<div class="page-title">
+										{{ pageTitle }}
+									</div>
+								</transition>
+								<div id="albums-lists">
+									<ul id="albums-first-colmn">
+										<li 
+											v-for="album in albumsFirstColmn"
+											v-on:click="loadAlbum( album.albumID )"
+										>{{ album.albumName }}</li>
+									</ul>
+									<ul id="albums-second-colmn">
+										<li 
+											v-for="album in albumsSecondColmn"
+											v-on:click="loadAlbum( album.albumID )"
+										>{{ album.albumName }}</li>
+									</ul>
+								</div>
+							</div>
+					</right-albums-list>
+
+					<right-customer-login
+						v-if="appSettings.rightPanelView == 'customerLogin'"
+						v-bind:app-settings="appSettings"
+						v-bind:customer="customer"
+						v-bind:errors="errors"
+					inline-template>
+
+						<div id="right-customer-login">
+							<transition name="slide-delay" mode="out-in">
+								<div 
+									v-if="appSettings.loginForm == 'customerLogin'" 
+									id="right-customer-login"
+									key="right-customer-login"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<form 
+										v-on:submit.prevent="submitLogin"
+									>
+						                <input type="hidden" name="action" value="login">
+
+						                <label>Email:</label>
+						                <input type="text" name="loginEmail" id="login-email"><br>
+						                
+						                <label>Password:</label>
+						                <input type="password" name="loginPassword" id="login-password"><br>
+
+						                <div 
+						                	v-if="customer.incorrectLogin" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">Incorrect email/password combination.</span><br>
+						                </div>
+
+						                <label>&nbsp;</label>
+						                <input type="submit" value="Login" class="submit-button artist-form">
+
+						                
+						                <button 
+						                	v-on:click.prevent="showRegisterForm"
+						                	class="submit-button register-button artist-form"
+						                >Register</button>
+						            </form>
+								</div>
+								<div 
+									v-else-if="appSettings.loginForm == 'createCustomer'"
+									id="right-customer-create"
+									key="right-customer-create"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<form 
+										v-on:submit.prevent="createCustomer"
+									>
+										<label>First Name:</label>
+						                <input type="text" name="firstName" id="first-name"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.firstName" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
+						                </div>
+
+						                <label>Last Name:</label>
+						                <input type="text" name="lastName" id="last-name"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.lastName" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
+						                </div>
+
+						                <label>Email:</label>
+						                <input type="text" name="createLoginEmail" id="create-login-email"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.email" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
+						                </div>
+						                
+						                <label>Password:</label>
+						                <input type="password" name="createLoginPassword" id="create-login-password"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.password" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
+						                </div>
+
+						                <label>Confirm Password:</label>
+						                <input type="password" name="createConfirmPassword" id="create-confirm-password"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.passwordTwo" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
+						                </div>
+
+						                <label>&nbsp;</label>
+						                <input type="submit" value="Register User" class="submit-button artist-form">
+						            </form>
+								</div>
+							</transition>
+						</div>
+					</right-customer-login>
+
+					<right-customer-account
+						v-if="appSettings.rightPanelView == 'customerAccount'"
+						v-bind:app-settings="appSettings"
+						v-bind:customer="customer"
+						v-bind:errors="errors"
+						v-bind:success="success"
+					inline-template>
+						<div id="right-customer-account">
+							<transition name="slide-delay" mode="out-in">
+								<div
+									v-if="appSettings.customerAccountPage == 'welcome'"
+									id="right-customer-welcome"
+									key="right-customer-welcome"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<h2>Welcome {{ customer.details.firstName }}</h2>
+								</div>
+								<div
+									v-else-if="appSettings.customerAccountPage == 'cart'"
+									id="right-customer-cart"
+									key="right-customer-cart"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<h2 id="cart-empty" v-if="!customer.cart.length">Your cart is empty</h2>
+									<div
+										v-if="customer.cart.length"
+										id="customer-cart-cont"
+									>
+										<div v-for="(item, index) in customer.cart" class="cart-item-cont">
+											<div class="cart-album-img">
+												<img v-bind:src="item.image">
+											</div>
+											<div class="cart-album-title-cont">
+												<div class="cart-artist-name">{{ item.artistName }}</div>
+												<div class="cart-album-name">{{ item.albumName }}</div>
+											</div>
+											<div class="cart-album-price" key="item.calPrice">${{ item.calPrice }}</div>
+											<div class="cart-quantity-cont">
+												<img 
+													class="cart-icon cart-icon-plus" 
+													src="images/rstore_icon_plus.png"
+													v-on:click="increaseQuantity(index)"
+												>
+												<input 
+													class="cart-quantity-input" 
+													v-model="item.quantity"
+													v-on:input="updatePrice(index)"
+												>
+												<img 
+													class="cart-icon cart-icon-minus" 
+													src="images/rstore_icon_minus.png"
+													v-on:click="decreaseQuantity(index)"
+												>
+											</div>
+											<img 
+												class="cart-icon cart-icon-delete" 
+												src="images/rstore_icon_delete.png"
+												v-on:click="removeItem(index)"
+											>
+										</div>
+										<div id="cart-total">Total Price: <span class="color-white">${{ totalPrice }}</span></div>
+										<button id="cart-checkout-btn" v-on:click="checkout">Checkout</button>
+									</div>
+								</div>
+								<div 
+									v-else-if="appSettings.customerAccountPage == 'editCustomer'"
+									id="right-customer-edit"
+									key="right-customer-edit"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<form 
+										v-on:submit.prevent="editCustomer"
+									>
+										<label>*First Name:</label>
+						                <input type="text" name="firstName" id="edit-first-name" v-bind:value="customer.details.firstName"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.firstName" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
+						                </div>
+
+						                <label>*Last Name:</label>
+						                <input type="text" name="lastName" id="edit-last-name" v-bind:value="customer.details.lastName"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.lastName" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
+						                </div>
+
+						                <label>*Email:</label>
+						                <input type="text" name="email" id="edit-email" v-bind:value="customer.details.emailAddress"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.email" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
+						                </div>
+						                
+						                <label>*Current Password:</label>
+						                <input type="password" name="loginPassword" id="edit-login-password"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.password" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
+						                </div>
+
+						                <label>New Password:</label>
+						                <input type="password" name="newPassword" id="edit-new-password"><br>
+
+						                <div 
+						                	v-if="errors.formErrors.passwordTwo" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
+						                </div>
+
+					                	<label>&nbsp;</label><br>
+						                <label>Country:</label>
+						                <input type="text" name="country" id="edit-country" v-bind:value="customer.details.address.country"><br>
+						                <div 
+						                	v-if="errors.formErrors.country" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.countryMessage }}</span><br>
+						                </div>
+						                <label>City:</label>
+						                <input type="text" name="city" id="edit-city" v-bind:value="customer.details.address.city"><br>
+						                <div 
+						                	v-if="errors.formErrors.city" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.cityMessage }}</span><br>
+						                </div>
+						                <label>Postal/Zip Code:</label>
+						                <input type="text" name="postalCode" id="edit-postal-code" v-bind:value="customer.details.address.postalCode"><br>
+						                <div 
+						                	v-if="errors.formErrors.postalCode" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.postalCodeMessage }}</span><br>
+						                </div>
+						                <label>Address Line 1:</label>
+						                <input type="text" name="addressOne" id="edit-address-one" v-bind:value="customer.details.address.line1"><br>
+						                <div 
+						                	v-if="errors.formErrors.addressOne" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.addressOneMessage }}</span><br>
+						                </div>
+						                <label>Address Line 2:</label>
+						                <input type="text" name="addressTwo" id="edit-address-two" v-bind:value="customer.details.address.line2"><br>
+						                <div 
+						                	v-if="errors.formErrors.addressTwo" 
+						                	class="login-error-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="login-error">{{ errors.formErrors.addressTwoMessage }}</span><br>
+						                </div>
+
+						                <label>&nbsp;</label>
+						                <input type="submit" value="Save Changes" class="submit-button artist-form">
+						                <div 
+						                	v-if="success.success"
+						                	class="form-success-cont"
+						                >
+							                <label>&nbsp;</label>
+							                <span class="form-success">{{ success.successMessage }}</span><br>
+						                </div>
+						            </form>
+								</div><!--createCustomer-->
+								<div
+									v-else-if="appSettings.customerAccountPage == 'checkout'"
+									id="right-customer-checkout"
+									key="right-customer-checkout"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<div id="customer-checkout-cont">
+										<h2>Order Details</h2>
+										<div id="checkout-order-cont">
+											<ul id="checkout-items-list">
+												<li v-for="item in customer.cart">{{ item.albumName }}<span v-if="item.quantity > 1" class="checkout-item-quantity"> x{{ item.quantity }}</span></li>
+											</ul>
+											<div id="checkout-total-price">Total Price: <span class="color-white">${{ totalPrice }}</span></div>
+										</div>
+										<h2>Billing info</h2>
+										<form v-on:submit.prevent="placeOrder">
+											<label>First Name:</label>
+							                <input type="text" name="firstName" v-bind:value=" customer.details.firstName" id="checkout-first-name" disabled><br>
+							                <div 
+							                	v-if="customer.errors.forms.firstName" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.firstNameMessage }}</span><br>
+							                </div>
+							                <label>Last Name:</label>
+							                <input type="text" name="lastName" v-bind:value=" customer.details.lastName" id="checkout-last-name" disabled><br>
+							                <div 
+							                	v-if="customer.errors.forms.lastName" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.lastNameMessage }}</span><br>
+							                </div>
+							                <label>&nbsp;</label><br>
+							                <label>Country:</label>
+							                <input type="text" v-bind:value="customer.details.address.country" name="country" id="checkout-country" v-bind:disabled="customer.details.address.line1.length > 0"><br>
+							                <div 
+							                	v-if="customer.errors.forms.country" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.countryMessage }}</span><br>
+							                </div>
+							                <label>City:</label>
+							                <input type="text" v-bind:value="customer.details.address.city" name="city" id="checkout-city" v-bind:disabled="customer.details.address.line1.length > 0"><br>
+							                <div 
+							                	v-if="customer.errors.forms.city" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.cityMessage }}</span><br>
+							                </div>
+							                <label>Postal/Zip Code:</label>
+							                <input type="text" v-bind:value="customer.details.address.postalCode" name="postalCode" id="checkout-postal-code" v-bind:disabled="customer.details.address.line1.length > 0"><br>
+							                <div 
+							                	v-if="customer.errors.forms.postalCode" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.postalCodeMessage }}</span><br>
+							                </div>
+							                <label>Address Line 1:</label>
+							                <input type="text" v-bind:value="customer.details.address.line1" name="addressOne" id="checkout-address-one" v-bind:disabled="customer.details.address.line1.length > 0"><br>
+							                <div 
+							                	v-if="customer.errors.forms.addressOne" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.addressOneMessage }}</span><br>
+							                </div>
+							                <label>Address Line 2:</label>
+							                <input type="text" v-bind:value="customer.details.address.line2" name="addressTwo" id="checkout-address-two" v-bind:disabled="customer.details.address.line1.length > 0"><br>
+							                <div 
+							                	v-if="customer.errors.forms.addressTwo" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ customer.errors.forms.addressTwoMessage }}</span><br>
+							                </div>
+							                <div v-if="!customer.details.address.line1.length">
+								                <label>Save address:</label>
+								                <label class="checkbox-label">
+								                    <input type="checkbox" name="saveAddress" id="checkout-save-address" class="checkbox" value="true">
+								                    <span class="custom-checkbox"></span>
+	               								</label><br>
+	               							</div>
+	               							<div v-else>
+	               								<label>&nbsp;</label>
+	               								<button class="edit-customer-button checkout-form" v-on:click.prevent="loadEditUser">Edit address info</button><br>
+	               							</div>
+						                	<label>&nbsp;</label><br>
+						                	<label>Payment method:</label>
+                							<select name="paymentMethod" id="payment-method">
+                								<option value="visa">Visa</option>
+                								<option value="mastercard">Mastercard</option>
+                								<option value="americanExpress">American Express</option>
+                							</select><br>
+                							<label>Card number:</label>
+							                <input type="text" name="cardNumber" id="checkout-card-number" disabled><br>
+							                <label>CCV:</label>
+							                <input type="text" name="ccv" id="checkout-card-number" disabled><br>
+							                <div class="login-error-cont">
+								                <label>&nbsp;</label>
+								                <span class="login-error">Credit card info disabled in this demo. Leave fields empty.</span><br>
+							                </div>
+                							<label>&nbsp;</label>
+						                	<input type="submit" value="Place order" class="submit-button checkout-form"><br>
+							            </form>
+									</div>
+								</div>
+								<div
+									v-if="appSettings.customerAccountPage == 'orderPlaced'"
+									id="right-customer-order-placed"
+									key="right-customer-order-placed"
+								>
+									<div id="customer-orders-cont">
+										<h2>Order Placed</h2>
+										<div class="order-cont">
+											<div class="customer-order-number">Order ID: {{ customer.orders[customer.orders.length-1].orderID }}</div>
+											<div class="order-panels-cont">
+												<div class="order-left-panel">
+													<div class="customer-order-date">Order Date: <span class="color-white">{{ customer.orders[customer.orders.length-1].orderDate }}</span></div>
+													<div class="customer-order-ship" v-if="customer.orders[customer.orders.length-1].shipDate != null">Ship Date: <span class="color-white">{{ customer.orders[customer.orders.length-1].shipDate }}</span></div>
+													<div class="order-items-title">Order Items:</div>
+													<ul class="order-items-list">
+														<li v-for="item in customer.orders[customer.orders.length-1].items">{{ item.albumName }}<span v-if="item.quantity > 1" class="order-item-quantity"> x{{ item.quantity }}</span></li>
+													</ul>
+													<div class="order-total-price">Total Price: <span class="color-white">${{ customer.orders[customer.orders.length-1].price }}</span></div>
+												</div>
+												<div class="order-right-panel">
+													<div class="customer-order-shipping">
+														<div class="order-address-title">Address:</div>
+														{{ customer.orders[customer.orders.length-1].address.city }}, {{ customer.orders[customer.orders.length-1].address.country }}<br>
+														{{ customer.orders[customer.orders.length-1].address.postalCode }}<br>
+														{{ customer.orders[customer.orders.length-1].address.line1 }}<br>
+														<span v-if="customer.orders[customer.orders.length-1].address.line2.length > 0">{{ customer.orders[customer.orders.length-1].address.line2 }}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+								<div
+									v-else-if="appSettings.customerAccountPage == 'orders'"
+									id="right-customer-orders"
+									key="right-customer-orders"
+								>
+									<transition appear name="slide-up-title">
+										<div class="page-title">{{ appSettings.pageTitle }}</div>
+									</transition>
+									<div id="customer-orders-cont">
+										<h2>Order History</h2>
+										<div v-if="!customer.orders.length" id="orders-empty">You have no previous orders.</div>
+										<div v-for="order in customer.orders" class="order-cont">
+											<div class="customer-order-number">Order ID: {{ order.orderID }}</div>
+											<div class="order-panels-cont">
+												<div class="order-left-panel">
+													<div class="customer-order-date">Order Date: <span class="color-white">{{ order.orderDate }}</span></div>
+													<div class="customer-order-ship" v-if="order.shipDate != null">Ship Date: <span class="color-white">{{ order.shipDate }}</span></div>
+													<div class="order-items-title">Order Items:</div>
+													<ul class="order-items-list">
+														<li v-for="item in order.items">{{ item.albumName }}<span v-if="item.quantity > 1" class="order-item-quantity"> x{{ item.quantity }}</span></li>
+													</ul>
+													<div class="order-total-price">Total Price: <span class="color-white">${{ order.price }}</span></div>
+												</div>
+												<div class="order-right-panel">
+													<div class="customer-order-shipping">
+														<div class="order-address-title">Address:</div>
+														{{ order.address.city }}, {{ order.address.country }}<br>
+														{{ order.address.postalCode }}<br>
+														{{ order.address.line1 }}<br>
+														<span v-if="order.address.line2.length > 0">{{ order.address.line2 }}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</transition>
+						</div>
+					</right-customer-account>
+					<right-errors
+						v-if="appSettings.rightPanelView == 'errors'"
+						v-bind:app-settings="appSettings"
+						v-bind:errors="errors"
+					inline-template>
+						<div id="right-errors">
+							<transition appear name="slide-up-title">
+								<div class="page-title">
+									{{ appSettings.pageTitle }}
+								</div>
+							</transition>
+							<div id="errors-cont">
+								<div id="errors">This app has encountered an error. Please contact the site admin.</div>
+							</div>
+						</div>
+					</right-errors>
+				</transition>
+			</div><!--#right-panel-->
+		</div><!--#vueApp-->
+	</div><!--#container-->
+	<script type="text/javascript" src="js/vue_components.js"></script>
+	<script type="text/javascript" src="js/main_vue.js"></script>
+	<script type="text/javascript" src="js/functions.js"></script>
+	<script type="text/javascript" src="js/ajax_requests.js"></script>
+	<script type="text/javascript" src="js/validate.js"></script>
+</body>
+</html>

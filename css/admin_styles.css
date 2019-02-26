@@ -1,0 +1,448 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  text-decoration: none; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+@font-face {
+  font-family: benton-sans;
+  src: url("../fonts/BentonSans_Condensed_Regular.otf"); }
+@font-face {
+  font-family: benton-sans;
+  src: url("../fonts/BentonSansExtraComp Medium.otf");
+  font-weight: bold; }
+html, body {
+  background-color: #942932;
+  background-image: url("../images/rstore_background3_sm.jpg");
+  position: relative;
+  height: 100%;
+  font-family: benton-sans;
+  color: white; }
+
+/*-----------------------
+OVERRIDE CLASSES
+------------------------*/
+.color-white {
+  color: #ffffff !important; }
+
+.color-gold {
+  color: #f6c115 !important; }
+
+.color-red {
+  color: #942932 !important; }
+
+/*-----------------------
+LEFT PANEL
+------------------------*/
+#left-panel {
+  width: 30%;
+  min-height: 100%;
+  position: absolute;
+  background-color: #942932;
+  box-shadow: 2px 0px 10px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100; }
+
+#logo {
+  width: 50%;
+  margin: 80px auto 50px auto; }
+  #logo img {
+    width: 100%; }
+
+#admin-menu {
+  text-align: center;
+  width: 40%;
+  margin: 0 auto;
+  color: #f6c115;
+  font-weight: bold;
+  font-size: 22pt; }
+  #admin-menu li {
+    width: 100%;
+    padding: 4px 0;
+    text-align: left; }
+  #admin-menu a {
+    text-decoration: none;
+    color: #f6c115; }
+    #admin-menu a:hover {
+      color: white;
+      cursor: pointer; }
+
+/*-----------------------
+RIGHT PANEL
+------------------------*/
+#right-panel {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  overflow: scroll;
+  transition: width 0.2s linear 0.2s; }
+  #right-panel.open {
+    width: 90%; }
+
+#greeting {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #f6c115;
+  font-size: 42pt;
+  font-weight: bold; }
+  #greeting span {
+    color: white; }
+
+#artists-list-cont, #albums-list-cont, #admins-list-cont, #orders-list-cont, #errors-cont {
+  position: relative;
+  margin-top: 140px;
+  margin-bottom: 140px; }
+
+h2 {
+  font-weight: bold;
+  font-size: 48pt;
+  color: white;
+  margin-bottom: 50px;
+  text-transform: uppercase; }
+
+#artists-list, #albums-list, #admins-list, #orders-list {
+  text-transform: uppercase;
+  color: #f6c115;
+  font-size: 30pt;
+  font-weight: bold; }
+  #artists-list li, #albums-list li, #admins-list li, #orders-list li {
+    padding: 5px 0; }
+  #artists-list a, #albums-list a, #admins-list a, #orders-list a {
+    text-decoration: none;
+    color: #f6c115; }
+    #artists-list a:hover, #albums-list a:hover, #admins-list a:hover, #orders-list a:hover {
+      color: white; }
+
+/*-----------------------
+EDIT ALBUM
+------------------------*/
+h3 {
+  font-weight: bold;
+  font-size: 2em;
+  text-transform: uppercase;
+  margin: 20px 0 10px 0;
+  color: #f6c115; }
+  h3#album-subhead {
+    margin-left: 19px; }
+
+label {
+  color: white;
+  position: relative;
+  display: inline-block;
+  width: 140px;
+  text-align: right;
+  font-size: 1.1em;
+  margin-bottom: 20px; }
+  label#tracklist-label {
+    margin-top: 20px; }
+
+.tracklist-number {
+  text-align: right;
+  width: 15px;
+  display: inline-block; }
+
+.tracklist {
+  display: inline-block;
+  position: relative;
+  left: -18px; }
+
+input, select {
+  width: 400px;
+  margin-left: 5px;
+  background-color: #781922;
+  color: white;
+  border: none;
+  font-size: 12pt;
+  padding: 5px; }
+  input:focus, select:focus {
+    outline: 2px solid #f6c115; }
+
+.checkbox-label {
+  width: 25px; }
+
+.checkbox {
+  opacity: 0;
+  margin: 8px 0;
+  width: 15px; }
+
+.custom-checkbox {
+  cursor: pointer;
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  left: 5px;
+  width: 14px;
+  height: 14px;
+  background-color: #781922;
+  border: 2px solid #781922; }
+
+label input:checked ~ .custom-checkbox, label input:focus ~ .custom-checkbox {
+  border: 2px solid #f6c115; }
+
+.custom-checkbox:after {
+  content: "";
+  display: none;
+  width: 7px;
+  height: 4px;
+  top: 2px;
+  left: 2px;
+  position: absolute;
+  border-left: 3px solid #f6c115;
+  border-bottom: 2px solid #f6c115;
+  transform: rotate(-40deg); }
+
+label input:checked ~ .custom-checkbox:after {
+  display: block; }
+
+.submit-button {
+  cursor: pointer;
+  background-color: #f0a900;
+  color: #942932;
+  margin-top: 20px;
+  width: 150px;
+  display: block;
+  margin-left: 35px; }
+  .submit-button.artist-form {
+    margin-top: 0;
+    margin-left: 5px;
+    display: inline; }
+
+.delete-icon, .add-icon {
+  width: 15px;
+  position: relative;
+  top: 1px;
+  margin-left: 5px;
+  cursor: pointer;
+  opacity: 0.6; }
+
+.add-icon {
+  transform: rotate(45deg);
+  opacity: 0.9; }
+
+.input-error {
+  display: none;
+  margin-left: 148px;
+  position: relative;
+  bottom: 10px;
+  color: red; }
+  .input-error.active {
+    display: block; }
+
+/*-----------------------
+EDIT ARTIST
+------------------------*/
+.album-list.artist-form {
+  font-size: 20pt;
+  font-weight: bold;
+  text-transform: uppercase; }
+  .album-list.artist-form li {
+    display: inline-block;
+    padding: 3px 0;
+    vertical-align: middle; }
+    .album-list.artist-form li a {
+      color: white;
+      margin-left: 52px; }
+      .album-list.artist-form li a:hover {
+        color: #f6c115; }
+
+.inline-delete {
+  display: inline; }
+
+.delete-button.artist-form, #add-button.artist-form {
+  font-size: 10pt;
+  display: inline;
+  padding: 2px 0;
+  vertical-align: middle;
+  margin-top: 0; }
+.delete-button.delete-artist, #add-button.delete-artist {
+  margin-top: 0;
+  margin-left: 148px; }
+.delete-button:disabled, #add-button:disabled {
+  background-color: #786464;
+  color: rgba(0, 0, 0, 0.7);
+  cursor: default; }
+
+.delete-button {
+  background-color: #da2933;
+  color: white; }
+  .delete-button.artist-form {
+    margin-left: 10px;
+    width: 75px;
+    margin-left: 12px; }
+
+#add-button {
+  width: 90px;
+  margin-left: 52px; }
+
+#delete-alert-cont {
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999; }
+
+#delete-alert-box {
+  text-align: center;
+  background-color: #942932;
+  border: 2px solid #f6c115;
+  padding: 40px 20px;
+  width: 20%;
+  margin: 0 auto;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12pt; }
+  #delete-alert-box p {
+    margin-bottom: 20px;
+    line-height: 130%; }
+    #delete-alert-box p span {
+      color: #f6c115;
+      text-transform: uppercase; }
+  #delete-alert-box button {
+    cursor: pointer;
+    border-radius: 0;
+    background-color: #f6c115;
+    color: #942932;
+    font-weight: bold;
+    font-size: 10pt;
+    text-transform: uppercase;
+    border: none;
+    width: 50px;
+    margin: 0 10px;
+    padding: 6px 12px; }
+
+/*-----------------------
+EDIT ADMIN
+------------------------*/
+#admins-list-cont .submit-button {
+  margin-left: 0;
+  width: 150px; }
+
+#error-message {
+  padding-right: 150px; }
+
+/*-----------------------
+ORDER VIEW
+------------------------*/
+#orders-list-cont {
+  font-family: benton-sans;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #f6c115;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto; }
+  #orders-list-cont h2 {
+    margin: 30px 0px 20px 0px;
+    overflow: visible; }
+    #orders-list-cont h2:first-of-type {
+      margin-top: 0; }
+
+.order-cont {
+  padding: 20px 30px;
+  border: 1px solid #f6c115;
+  margin-bottom: 35px;
+  padding: 0px;
+  width: 100%; }
+
+.customer-order-number {
+  font-size: 24pt;
+  color: #942932;
+  background-color: #f0a900;
+  padding: 20px 40px 10px 40px;
+  margin-bottom: 30px; }
+
+.order-panels-cont {
+  display: flex; }
+
+.order-left-panel, .order-right-panel {
+  width: 50%;
+  padding-left: 40px; }
+
+.customer-order-date, .customer-order-ship {
+  font-size: 20pt;
+  margin-bottom: 10px; }
+
+.order-items-title {
+  margin-top: 20px;
+  font-size: 20pt; }
+
+.order-items-list {
+  font-size: 14pt;
+  color: white;
+  margin-left: 25px; }
+  .order-items-list li {
+    cursor: default !important;
+    margin: 5px 0; }
+    .order-items-list li span {
+      text-transform: lowercase;
+      color: #f6c115; }
+
+.order-total-price {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  font-size: 20pt; }
+
+.customer-order-shipping {
+  color: #ffffff;
+  font-size: 14pt;
+  line-height: 25px; }
+
+.order-address-title {
+  color: #f6c115;
+  margin-bottom: 10px;
+  font-size: 20pt; }
+
+#orders-empty {
+  font-size: 0.5em;
+  color: #ffffff; }
+
+/*# sourceMappingURL=admin_styles.css.map */

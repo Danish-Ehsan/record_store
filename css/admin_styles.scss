@@ -1,0 +1,505 @@
+@import 'resets';
+
+$primary-red: #942932;
+$primary-gold: #f6c115;
+$dark-gold: #f0a900;
+$dark-red: #781922;
+
+@font-face {
+	font-family: benton-sans;
+	src: url('../fonts/BentonSans_Condensed_Regular.otf');
+}
+
+@font-face {
+	font-family: benton-sans;
+	src: url('../fonts/BentonSansExtraComp Medium.otf');
+	font-weight: bold;
+}
+
+html, body {
+	background-color: $primary-red;
+	background-image: url('../images/rstore_background3_sm.jpg');
+	position: relative;
+	height: 100%;
+	font-family: benton-sans;
+	color: white;
+}
+
+
+/*-----------------------
+OVERRIDE CLASSES
+------------------------*/
+
+.color-white {
+	color: #ffffff !important;
+}
+
+.color-gold {
+	color: $primary-gold !important;
+}
+
+.color-red {
+	color: $primary-red !important;
+}
+
+
+/*-----------------------
+LEFT PANEL
+------------------------*/
+
+#left-panel {
+	width: 30%;
+	min-height: 100%;
+	position: absolute;
+	background-color: $primary-red;
+	box-shadow: 2px 0px 10px 6px rgba(0,0,0,0.1);
+	z-index: 100;
+}
+
+#logo {
+	width: 50%;
+	margin: 80px auto 50px auto;
+	img {
+		width: 100%;
+	}
+}
+
+#admin-menu {
+	text-align: center;
+	width: 40%;
+	margin: 0 auto;
+	color: $primary-gold;
+	font-weight: bold;
+	font-size: 22pt;
+	li {
+		width: 100%;
+		padding: 4px 0;
+		text-align: left;
+	}
+	a {
+		text-decoration: none;
+		color: $primary-gold;
+		&:hover {
+			color: white;
+			cursor: pointer;
+		}
+	}
+}
+
+/*-----------------------
+RIGHT PANEL
+------------------------*/
+
+#right-panel {
+	position: fixed;
+	right: 0;
+	top: 0;
+	width: 60%;
+	height: 100%;
+	overflow: scroll;
+	transition: width 0.2s linear 0.2s;
+	&.open {
+		width: 90%;
+	}
+}
+
+#greeting {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	color: $primary-gold;
+	font-size: 42pt;
+	font-weight: bold;
+	span {
+		color: white;
+	}
+}
+
+#artists-list-cont, #albums-list-cont, #admins-list-cont, #orders-list-cont, #errors-cont {
+	position: relative;
+	margin-top: 140px;
+	margin-bottom: 140px;
+}
+
+h2 {
+	font-weight: bold;
+	font-size: 48pt;
+	color: white;
+	margin-bottom: 50px;
+	text-transform: uppercase;
+}
+
+#artists-list, #albums-list, #admins-list, #orders-list {
+	text-transform: uppercase;
+	color: $primary-gold;
+	font-size: 30pt;
+	font-weight: bold;
+	li {
+		padding: 5px 0;
+	}
+	a {
+		text-decoration: none;
+		color: $primary-gold;
+		&:hover {
+			color: white;
+		}
+	}
+}
+
+
+
+
+/*-----------------------
+EDIT ALBUM
+------------------------*/
+
+h3 {
+	font-weight: bold;
+	font-size: 2em;
+	text-transform: uppercase;
+	margin: 20px 0 10px 0;
+	color: $primary-gold;
+	&#album-subhead {
+		margin-left: 19px;
+	}
+}
+
+label {
+	color: white;
+	position: relative;
+	display: inline-block;
+	width: 140px;
+	text-align: right;
+	font-size: 1.1em;
+	margin-bottom: 20px;
+	&#tracklist-label {
+		margin-top: 20px;
+	}
+}
+
+.tracklist-number {
+	text-align: right;
+	width: 15px;
+	display: inline-block;
+}
+
+.tracklist {
+	display: inline-block;
+	position: relative;
+	left: -18px;
+}
+
+
+input, select {
+	width: 400px;
+	margin-left: 5px;
+	background-color: $dark-red;
+	color: white;
+	border: none;
+	font-size: 12pt;
+	padding: 5px;
+	&:focus {
+		outline: 2px solid $primary-gold;
+
+	}
+}
+
+.checkbox-label {
+	width: 25px;
+}
+
+.checkbox {
+	opacity: 0;
+	margin: 8px 0;
+	width: 15px;
+}
+
+.custom-checkbox {
+	cursor: pointer;
+	position: absolute;
+	top: 45%;
+	transform: translateY(-50%);
+	left: 5px;
+	width: 14px;
+	height: 14px;
+	background-color: $dark-red;
+	border: 2px solid $dark-red;
+}
+
+label input:checked ~ .custom-checkbox, label input:focus ~ .custom-checkbox {
+	border: 2px solid $primary-gold;
+}
+
+.custom-checkbox:after {
+	content: "";
+	display: none;
+	width: 7px;
+	height: 4px;
+	top: 2px;
+	left: 2px;
+	position: absolute;
+	border-left: 3px solid $primary-gold;
+	border-bottom: 2px solid $primary-gold;
+	transform: rotate(-40deg);
+}
+
+label input:checked ~ .custom-checkbox:after {
+	display: block;
+}
+
+.submit-button {
+	cursor: pointer;
+	background-color: $dark-gold;
+	color: $primary-red;
+	margin-top: 20px;
+	width: 150px;
+	display: block;
+	margin-left: 35px;
+	&.artist-form {
+		margin-top: 0;
+		margin-left: 5px;
+		display: inline;
+	}
+}
+
+.delete-icon {
+	width: 15px;
+	position: relative;
+	top: 1px;
+	margin-left: 5px;
+	cursor: pointer;
+	opacity: 0.6;
+}
+
+.add-icon {
+	@extend .delete-icon;
+	transform: rotate(45deg);
+	opacity: 0.9;
+}
+
+.input-error {
+	display: none;
+	margin-left: 148px;
+	position: relative;
+	bottom: 10px;
+	color: red;
+	&.active {
+		display: block;
+	}
+}
+
+/*-----------------------
+EDIT ARTIST
+------------------------*/
+
+.album-list.artist-form {
+	font-size: 20pt;
+	font-weight: bold;
+	text-transform: uppercase;
+	li {
+		display: inline-block;
+		padding: 3px 0;
+		vertical-align: middle;
+		a {
+			color: white;
+			margin-left: 52px;
+			&:hover {
+				color: $primary-gold;
+			}
+		}
+	}
+}
+
+.inline-delete {
+	display: inline;
+}
+
+.delete-button, #add-button {
+	&.artist-form {
+		font-size: 10pt;
+		display: inline;
+		padding: 2px 0;
+		vertical-align: middle;
+		margin-top: 0;
+	}
+	&.delete-artist {
+		margin-top: 0;
+		margin-left: 148px;
+	}
+	&:disabled {
+		background-color: rgb(120, 100, 100);
+		color: rgba(0, 0, 0, 0.7);
+		cursor: default;
+	}
+}
+
+.delete-button {
+	background-color: #da2933;
+	color: white;
+	&.artist-form {
+		margin-left: 10px;
+		width: 75px;
+		margin-left: 12px;
+	}
+}
+
+#add-button {
+	width: 90px;
+	margin-left: 52px;
+}
+
+#delete-alert-cont {
+	display: none;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 9999;
+}
+
+#delete-alert-box {
+	text-align: center;
+	background-color: $primary-red;
+	border: 2px solid $primary-gold;
+	padding: 40px 20px;
+	width: 20%;
+	margin: 0 auto;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 12pt;
+	p {
+		margin-bottom: 20px;
+		line-height: 130%;
+		span {
+			color: $primary-gold;
+			text-transform: uppercase;
+		}
+	}
+	button {
+		cursor: pointer;
+		border-radius: 0;
+		background-color: $primary-gold;
+		color: $primary-red;
+		font-weight: bold;
+		font-size: 10pt;
+		text-transform: uppercase;
+		border: none;
+		width: 50px;
+		margin: 0 10px;
+		padding: 6px 12px;
+	}
+}
+
+/*-----------------------
+EDIT ADMIN
+------------------------*/
+
+#admins-list-cont .submit-button {
+	margin-left: 0;
+	width: 150px;
+}
+
+#error-message {
+	padding-right: 150px;
+}
+
+
+/*-----------------------
+ORDER VIEW
+------------------------*/
+
+#orders-list-cont {
+	font-family: benton-sans;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: $primary-gold;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	h2 {
+		margin: 30px 0px 20px 0px;
+		overflow: visible;
+		&:first-of-type {
+			margin-top: 0;
+		}
+	}
+}
+
+.order-cont {
+	padding: 20px 30px;
+	border: 1px solid $primary-gold;
+	margin-bottom: 35px;
+	padding: 0px;
+	width: 100%;
+}
+
+.customer-order-number {
+	font-size: 24pt;
+	color: $primary-red;
+	background-color: $dark-gold;
+	padding: 20px 40px 10px 40px;
+	margin-bottom: 30px;
+}
+
+.order-panels-cont {
+	display: flex;
+}
+
+.order-left-panel, .order-right-panel {
+	width: 50%;
+	padding-left: 40px;
+}
+
+.customer-order-date, .customer-order-ship {
+	font-size: 20pt;
+	margin-bottom: 10px;
+}
+
+.order-items-title {
+	margin-top: 20px;
+	font-size: 20pt;
+}
+
+.order-items-list {
+	font-size: 14pt;
+	color: white;
+	li {
+		cursor: default !important;
+		margin: 5px 0;
+		span {
+			text-transform: lowercase;
+			color: $primary-gold;
+		}
+	}
+	margin-left: 25px;
+}
+
+.order-item-quantity {
+}
+
+.order-total-price {
+	margin-top: 20px;
+	margin-bottom: 30px;
+	font-size: 20pt;
+}
+
+.customer-order-shipping {
+	color: #ffffff;
+	font-size: 14pt;
+	line-height: 25px;
+}
+
+.order-address-title {
+	color: $primary-gold;
+	margin-bottom: 10px;
+	font-size: 20pt;
+}
+
+#orders-empty {
+	font-size: 0.5em;
+	color: #ffffff;
+}

@@ -1,0 +1,768 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  text-decoration: none; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+@font-face {
+  font-family: benton-sans;
+  src: url("../fonts/BentonSans_Condensed_Regular.otf"); }
+@font-face {
+  font-family: benton-sans;
+  src: url("../fonts/BentonSansExtraComp Medium.otf");
+  font-weight: bold; }
+html, body {
+  background-color: #942932;
+  position: relative;
+  height: 100%;
+  font-family: benton-sans; }
+
+/*-----------------------
+OVERRIDE CLASSES
+------------------------*/
+.color-white {
+  color: #ffffff !important; }
+
+.color-gold {
+  color: #f6c115 !important; }
+
+.color-red {
+  color: #942932 !important; }
+
+/*-----------------------
+NAVIGATION
+------------------------*/
+#nav-cont {
+  position: fixed;
+  right: 0;
+  height: 100%;
+  z-index: 95;
+  font-size: 0; }
+
+#nav-button {
+  display: inline-block;
+  background-color: #f0a900;
+  padding: 7px 15px;
+  text-transform: uppercase;
+  color: #942932;
+  font-size: 22pt;
+  font-weight: bold;
+  border-radius: 10px 10px 0 0;
+  letter-spacing: 1.5px;
+  transform: rotate(270deg);
+  transform-origin: 105% 100%;
+  position: relative;
+  top: 100px;
+  vertical-align: top;
+  cursor: pointer; }
+
+#nav-logo {
+  width: 90px;
+  margin: 100px auto 30px auto; }
+  #nav-logo img {
+    width: 100%; }
+
+#nav-menu {
+  display: inline-block;
+  text-align: center;
+  width: 0px;
+  height: 100%;
+  background-color: #f0a900;
+  transition: width 0.5s; }
+  #nav-menu.active {
+    width: 200px; }
+  #nav-menu ul {
+    display: inline-block;
+    margin: 0 auto;
+    text-transform: uppercase;
+    text-align: left;
+    font-size: 30pt;
+    font-weight: bold; }
+    #nav-menu ul :hover {
+      color: white; }
+    #nav-menu ul li {
+      padding: 6px 10px;
+      cursor: pointer; }
+      #nav-menu ul li a {
+        color: #942932; }
+        #nav-menu ul li a:hover {
+          color: white; }
+
+/*-----------------------
+MAIN USER BUTTONS
+------------------------*/
+#user-cont {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  right: 20px;
+  top: 10px;
+  z-index: 99; }
+
+#user-cart-cont {
+  display: flex;
+  align-items: center; }
+
+#user-cart-icon {
+  display: inline-block;
+  height: 17px;
+  margin-right: 3px; }
+  #user-cart-icon img {
+    height: 100%; }
+
+#user-cart-quantity-cont {
+  display: flex;
+  width: 13px;
+  height: 13px;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  font-size: 10pt;
+  font-weight: bold;
+  padding: 2px;
+  border-radius: 100%;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #f6c115;
+  color: #942932; }
+  #user-cart-quantity-cont.dark {
+    background-color: #942932;
+    color: #f6c115; }
+
+#cart-quantity {
+  margin-top: 2px; }
+
+#user-name {
+  display: inline;
+  position: relative;
+  font-size: 11pt;
+  margin-left: 10px;
+  margin-top: 2px; }
+  #user-name a {
+    color: #ffffff; }
+    #user-name a:hover {
+      color: #f6c115; }
+  #user-name img {
+    height: 12px;
+    margin-left: 1px;
+    vertical-align: middle; }
+
+/*-----------------------
+LEFT PANEL
+------------------------*/
+#left-panel {
+  width: 40%;
+  min-height: 100%;
+  background-color: #942932;
+  position: absolute;
+  box-shadow: 2px 0px 10px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  transition: width 0.2s ease-in 0.2s; }
+  #left-panel.closed {
+    height: 100%;
+    width: 10%; }
+  #left-panel.narrow {
+    width: 25%; }
+
+#logo {
+  width: 60%;
+  margin: 0 auto 500px auto;
+  position: relative; }
+  #logo img {
+    width: 100%; }
+
+.album-image-cont {
+  width: 70%;
+  margin: 400px auto;
+  cursor: pointer; }
+  .album-image-cont:first-of-type {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%); }
+  .album-image-cont img {
+    width: 100%; }
+
+#user-menu-cont {
+  width: 50%;
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%); }
+
+#user-menu {
+  text-transform: uppercase;
+  font-size: 24pt;
+  font-weight: bold;
+  letter-spacing: 0.8px; }
+  #user-menu li {
+    padding: 2px 0; }
+    #user-menu li a {
+      color: #f6c115; }
+      #user-menu li a:hover {
+        color: white; }
+
+/*-----------------------
+RIGHT PANEL
+------------------------*/
+#right-panel {
+  background-image: url("../images/rstore_background3_sm.jpg");
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  transition: width 0.2s ease-in 0.2s; }
+  #right-panel.open {
+    width: 90%; }
+  #right-panel.wide {
+    width: 75%; }
+
+#store-name {
+  width: 500px;
+  margin-left: 150px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%); }
+  #store-name img {
+    width: 100%; }
+
+.album-info {
+  position: absolute;
+  top: 50%;
+  max-height: 100%;
+  overflow: scroll;
+  transform: translateY(-50%);
+  margin-left: 100px;
+  width: 80%; }
+
+.right-album-info {
+  height: 100%; }
+
+#artist-name {
+  color: white;
+  font-size: 30pt;
+  margin-bottom: 0px;
+  cursor: pointer; }
+
+#album-name {
+  color: #f6c115;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 45pt;
+  letter-spacing: 1.5px;
+  cursor: pointer; }
+
+.yellow-arrow {
+  height: 35px;
+  margin-left: 10px;
+  margin-bottom: 4px;
+  display: inline; }
+
+.more-info {
+  margin-top: 20px;
+  max-height: 0px;
+  overflow: hidden;
+  transition: max-height 0.75s; }
+  .more-info.active {
+    max-height: 1000px; }
+
+.price {
+  color: white;
+  font-size: 24pt;
+  display: inline;
+  vertical-align: top;
+  font-weight: bold; }
+
+.cart-button {
+  background-color: #f0a900;
+  padding: 5px 10px;
+  color: #942932;
+  text-transform: uppercase;
+  border: none;
+  font-size: 12pt;
+  font-weight: bold;
+  vertical-align: top;
+  margin-left: 20px;
+  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2); }
+
+.tracklist {
+  list-style-position: inside;
+  list-style-color: #f6c115;
+  color: #f6c115;
+  margin-top: 50px;
+  max-height: 450px;
+  overflow: scroll; }
+  .tracklist li:nth-child(even) {
+    background-color: #a02938; }
+  .tracklist li:nth-child(odd) {
+    background-color: #942932; }
+  .tracklist li {
+    padding: 11px 40px; }
+    .tracklist li span {
+      color: white;
+      padding-left: 10px; }
+
+.home-page-title, .page-title {
+  color: white;
+  text-transform: uppercase;
+  display: inline;
+  position: absolute;
+  opacity: 0.15;
+  font-size: 80pt;
+  transform: rotate(90deg);
+  transform-origin: 0% 100%;
+  vertical-align: text-bottom;
+  left: -13px;
+  top: 100%;
+  transition: top 0.25s;
+  font-weight: bold; }
+
+.page-title {
+  top: 0px;
+  left: 93px;
+  transform-origin: 0% 0%;
+  transition: all 0.25s linear 0.7s; }
+
+/*-----------------------
+ARTISTS/ALBUMS LIST PAGE
+------------------------*/
+#right-artists-list, #right-customer-login, #right-customer-account, #right-customer-create, #right-albums-list {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 150px auto 150px auto;
+  padding-left: 50px;
+  color: #f6c115;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 38pt;
+  letter-spacing: 1px; }
+  #right-artists-list ul, #right-customer-login ul, #right-customer-account ul, #right-customer-create ul, #right-albums-list ul {
+    width: 40%;
+    min-width: 300px;
+    display: inline-block;
+    vertical-align: top; }
+    #right-artists-list ul li, #right-customer-login ul li, #right-customer-account ul li, #right-customer-create ul li, #right-albums-list ul li {
+      margin: 10px 0;
+      cursor: pointer; }
+      #right-artists-list ul li:hover, #right-customer-login ul li:hover, #right-customer-account ul li:hover, #right-customer-create ul li:hover, #right-albums-list ul li:hover {
+        color: white; }
+
+#artist-lists, #albums-lists {
+  width: 80%;
+  margin: 0 auto; }
+
+/*-----------------------
+USER PAGES
+------------------------*/
+#right-customer-login, #right-customer-account, #right-customer-create {
+  overflow: scroll; }
+  #right-customer-login form, #right-customer-login h2, #right-customer-account form, #right-customer-account h2, #right-customer-create form, #right-customer-create h2 {
+    height: 100%;
+    margin: 0 auto; }
+  #right-customer-login form, #right-customer-account form, #right-customer-create form {
+    font-size: 0pt; }
+
+#right-customer-template {
+  height: 100%; }
+
+label {
+  color: white;
+  position: relative;
+  display: inline-block;
+  width: 180px;
+  text-align: right;
+  font-size: 18pt;
+  margin-bottom: 20px;
+  top: 3px; }
+
+.align-top {
+  vertical-align: top; }
+
+input, .edit-customer-button, select {
+  width: 400px;
+  margin-left: 5px;
+  background-color: #781922;
+  color: white;
+  border: none;
+  font-size: 12pt;
+  padding: 5px; }
+  input:focus, .edit-customer-button:focus, select:focus {
+    outline: 2px solid #f6c115; }
+
+input:first-of-type, .edit-customer-button:first-of-type {
+  margin-top: 0px; }
+
+input:disabled, .edit-customer-button:disabled {
+  /*cursor: not-allowed;*/
+  background-color: rgba(0, 0, 0, 0); }
+
+.submit-button, .edit-customer-button {
+  cursor: pointer;
+  background-color: #f0a900;
+  color: #942932;
+  margin-top: 20px;
+  width: 150px;
+  display: block;
+  margin-left: 35px; }
+  .submit-button.artist-form, .artist-form.edit-customer-button, .submit-button.checkout-form, .checkout-form.edit-customer-button {
+    margin-top: 0;
+    margin-left: 5px;
+    display: inline; }
+
+.register-button {
+  border: none;
+  font-size: 12pt;
+  width: 150px;
+  padding: 5px;
+  background-color: green;
+  color: white; }
+
+.login-error, .form-success {
+  color: white;
+  font-size: 14pt;
+  position: relative;
+  left: 6px;
+  text-transform: none;
+  vertical-align: top; }
+
+.login-error-cont, .form-success-cont {
+  display: inline-block;
+  width: 100%; }
+
+/*-----------------------
+USER CART
+------------------------*/
+#right-customer-cart, #right-customer-checkout, #right-customer-orders {
+  height: 80%;
+  overflow: scroll; }
+
+#customer-cart-cont {
+  height: 80%;
+  width: 80%;
+  margin: 0 auto; }
+
+.cart-item-cont {
+  background-color: #8e2630;
+  padding: 20px 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center; }
+  .cart-item-cont:nth-child(even) {
+    background-color: #942932; }
+
+.cart-album-img {
+  width: 100px;
+  height: 100px;
+  display: inline-block;
+  overflow: hidden; }
+  .cart-album-img img {
+    min-width: 100%;
+    max-height: 100%; }
+
+.cart-album-title-cont {
+  width: 250px;
+  display: inline-block;
+  overflow: hidden;
+  padding-left: 20px; }
+
+.cart-artist-name {
+  font-size: 14pt;
+  color: #ffffff; }
+
+.cart-album-name {
+  font-size: 24pt; }
+
+.cart-album-price {
+  font-size: 24pt;
+  width: 120px;
+  padding-left: 20px;
+  display: inline-block;
+  color: #ffffff; }
+
+.cart-quantity-cont {
+  display: inline;
+  display: flex;
+  align-items: center; }
+
+.cart-quantity-input {
+  width: 20px;
+  margin: 0;
+  text-align: center; }
+
+.cart-quantity-icon {
+  display: inline; }
+
+.cart-icon {
+  width: 15px;
+  padding: 0 10px;
+  display: inline-block;
+  cursor: pointer; }
+
+.cart-icon-delete {
+  width: 20px;
+  padding-left: 40px; }
+
+#cart-total {
+  font-size: 30pt;
+  padding: 10px 30px;
+  display: inline-block; }
+
+#cart-checkout-btn {
+  background-color: #f0a900;
+  color: #942932;
+  font-size: 20pt;
+  font-weight: bold;
+  font-family: benton-sans;
+  text-transform: uppercase;
+  vertical-align: center;
+  padding: 5px 30px;
+  margin: 10px 30px;
+  float: right;
+  border: none; }
+
+/*-----------------------
+CHECKOUT
+------------------------*/
+#customer-checkout-cont, #customer-orders-cont {
+  width: 80%;
+  margin: 0 auto; }
+  #customer-checkout-cont h2, #customer-orders-cont h2 {
+    margin: 30px 0px 20px 0px;
+    overflow: visible; }
+    #customer-checkout-cont h2:first-of-type, #customer-orders-cont h2:first-of-type {
+      margin-top: 0; }
+  #customer-checkout-cont form, #customer-orders-cont form {
+    overflow: visible; }
+
+#checkout-order-cont, .order-cont {
+  padding: 20px 30px;
+  border: 1px solid #f6c115; }
+
+#checkout-items-list, .order-items-list {
+  font-size: 14pt;
+  color: white; }
+  #checkout-items-list li, .order-items-list li {
+    cursor: default !important; }
+    #checkout-items-list li span, .order-items-list li span {
+      text-transform: lowercase;
+      color: #f6c115; }
+
+#checkout-total-price, .order-total-price {
+  margin-top: 10px;
+  font-size: 18pt; }
+
+.checkbox-label {
+  width: 25px;
+  margin-bottom: 0; }
+
+.checkbox {
+  opacity: 0;
+  margin: 8px 0;
+  width: 15px; }
+
+.custom-checkbox {
+  cursor: pointer;
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  left: 5px;
+  width: 14px;
+  height: 14px;
+  background-color: #781922;
+  border: 2px solid #781922; }
+
+label input:checked ~ .custom-checkbox, label .edit-customer-button:checked ~ .custom-checkbox, label input:focus ~ .custom-checkbox, label .edit-customer-button:focus ~ .custom-checkbox {
+  border: 2px solid #f6c115; }
+
+.custom-checkbox:after {
+  content: "";
+  display: none;
+  width: 7px;
+  height: 4px;
+  top: 2px;
+  left: 2px;
+  position: absolute;
+  border-left: 3px solid #f6c115;
+  border-bottom: 2px solid #f6c115;
+  transform: rotate(-40deg); }
+
+label input:checked ~ .custom-checkbox:after, label .edit-customer-button:checked ~ .custom-checkbox:after {
+  display: block; }
+
+.edit-customer-button {
+  background-color: green;
+  color: white; }
+
+/*-----------------------
+USER ORDERS
+------------------------*/
+.order-cont {
+  margin-bottom: 35px;
+  padding: 0px;
+  width: 100%; }
+
+.customer-order-number {
+  font-size: 24pt;
+  color: #942932;
+  background-color: #f0a900;
+  padding: 20px 40px 10px 40px;
+  margin-bottom: 30px; }
+
+.order-panels-cont {
+  display: flex; }
+
+.order-left-panel, .order-right-panel {
+  width: 50%;
+  padding-left: 40px; }
+
+.customer-order-date, .customer-order-ship {
+  font-size: 20pt;
+  margin-bottom: 10px; }
+
+.order-items-title {
+  margin-top: 20px;
+  font-size: 20pt; }
+
+.order-items-list {
+  margin-left: 25px; }
+
+.order-total-price {
+  font-size: 20pt;
+  margin-bottom: 30px; }
+
+.customer-order-shipping {
+  color: #ffffff;
+  font-size: 14pt;
+  line-height: 25px; }
+
+.order-address-title {
+  color: #f6c115;
+  margin-bottom: 10px;
+  font-size: 20pt; }
+
+#orders-empty {
+  font-size: 0.5em;
+  color: #ffffff; }
+
+/*-----------------------
+VUE ANIMATION
+------------------------*/
+.slide-leave-active {
+  position: relative;
+  left: 0;
+  transition: all 0.2s; }
+
+.slide-enter-active {
+  position: relative;
+  left: 0;
+  transition: all 0.2s; }
+
+.slide-enter, .slide-leave-to {
+  position: relative;
+  opacity: 0;
+  left: 100px; }
+
+.slide-left-leave-active {
+  position: relative;
+  transition: all 0.2s; }
+
+.slide-left-enter-active {
+  position: relative;
+  transition: all 0.2s; }
+
+.slide-left-enter, .slide-left-leave-to {
+  position: relative;
+  opacity: 0; }
+
+.slide-left-delay-leave-active {
+  position: relative;
+  transition: all 0.2s; }
+
+.slide-left-delay-enter-active {
+  position: relative;
+  transition: all 0.2s linear 0.5s; }
+
+.slide-left-delay-enter, .slide-left-delay-leave-to {
+  position: relative;
+  opacity: 0; }
+
+.cart-slide-down-enter-active, .cart-slide-down-leave-active {
+  position: relative;
+  top: 0;
+  transition: all 0.2s; }
+
+.cart-slide-down-enter {
+  position: relative;
+  opacity: 0;
+  top: -20px; }
+
+.cart-slide-down-leave-to {
+  position: relative;
+  opacity: 0;
+  top: 20px; }
+
+.slide-delay-leave-active {
+  position: relative;
+  left: 0;
+  transition: all 0.2s; }
+
+.slide-delay-enter-active {
+  position: relative;
+  left: 0;
+  transition: all 0.2s linear 0.5s; }
+
+.slide-delay-enter, .slide-delay-leave-to {
+  position: relative;
+  opacity: 0;
+  left: 100px; }
+
+.slide-up-title-enter, .slide-up-title-leave-to {
+  position: relative;
+  top: 100%; }
+
+/*# sourceMappingURL=main.css.map */
