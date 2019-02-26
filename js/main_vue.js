@@ -92,19 +92,32 @@ var vm = new Vue({
 				url: 'data?action=getArtists',
 				type: 'GET',
 				success: (result) => {
-					result = JSON.parse(result);
-					this.artists = result;
-					clearInterval(albumInfoInterval);
+					try {
+						result = JSON.parse(result);
+						this.artists = result;
+						clearInterval(albumInfoInterval);
 
-					this.appSettings.showNav = false;
-					this.appSettings.leftPanelView = 'none';
-					this.appSettings.rightPanelView = 'artistsList';
-					this.appSettings.pageTitle = 'Artists';
-					history.pushState({ appSettings: this.appSettings, artists: this.artists }, '');
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'none';
+						this.appSettings.rightPanelView = 'artistsList';
+						this.appSettings.pageTitle = 'Artists';
+						history.pushState({ appSettings: this.appSettings, artists: this.artists }, '');
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		},
@@ -113,20 +126,33 @@ var vm = new Vue({
 				url: 'data?action=getAlbumsCatalog',
 				type: 'GET',
 				success: (result) => {
-					result = JSON.parse(result);
-					this.albums = result;
-					clearInterval(albumInfoInterval);
+					try {
+						result = JSON.parse(result);
+						this.albums = result;
+						clearInterval(albumInfoInterval);
 
-					// this.appSettings.showLeftLogo = false;
-					this.appSettings.showNav = false;
-					this.appSettings.leftPanelView = 'none';
-					this.appSettings.rightPanelView = 'albumsList';
-					this.appSettings.pageTitle = 'Albums';
-					history.pushState({ appSettings: this.appSettings, albums: this.albums }, '');
+						// this.appSettings.showLeftLogo = false;
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'none';
+						this.appSettings.rightPanelView = 'albumsList';
+						this.appSettings.pageTitle = 'Albums';
+						history.pushState({ appSettings: this.appSettings, albums: this.albums }, '');
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		},
@@ -135,29 +161,42 @@ var vm = new Vue({
 				url: 'data',
 				type: 'GET',
 				success: (result) => {
-					console.log('loadhome test');
-					var myObj = JSON.parse(result);
-		    		vm.albums = myObj;
-		    		this.appSettings.currentAlbum = 0;
-					this.appSettings.showRightLogo = true;
-					this.appSettings.showLeftLogo = true;
-					this.appSettings.showInfo = false;
-					this.appSettings.showNav = false;
-					this.appSettings.leftPanelView = 'albumCovers';
-					this.appSettings.rightPanelView = 'albums';
-					this.appSettings.pageTitle = 'Featured Albums';
-					albumInfoInterval =  setInterval(albumInfoScroll, 200);
-					history.pushState({ appSettings: this.appSettings, albums: this.albums, artists: this.artists }, '');
-					//need delay to allow logo to render
-					setTimeout(function() {
-						setLogoMargin();
-					},1);
-					
-					scrollToTop();
+					try {
+						console.log('loadhome test');
+						var myObj = JSON.parse(result);
+			    		vm.albums = myObj;
+			    		this.appSettings.currentAlbum = 0;
+						this.appSettings.showRightLogo = true;
+						this.appSettings.showLeftLogo = true;
+						this.appSettings.showInfo = false;
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'albumCovers';
+						this.appSettings.rightPanelView = 'albums';
+						this.appSettings.pageTitle = 'Featured Albums';
+						albumInfoInterval =  setInterval(albumInfoScroll, 200);
+						history.pushState({ appSettings: this.appSettings, albums: this.albums, artists: this.artists }, '');
+						//need delay to allow logo to render
+						setTimeout(function() {
+							setLogoMargin();
+						},1);
+						
+						scrollToTop();
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		},

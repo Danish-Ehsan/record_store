@@ -87,26 +87,39 @@ Vue.component('right-artists-list', {
 				url: 'data?action=getArtistCatalog&artistID=' + artistID,
 				type: 'GET',
 				success: (result) => {
-					result = JSON.parse(result);
-					console.log(result);
-					vm.albums = result;
+					try {
+						result = JSON.parse(result);
+						console.log(result);
+						vm.albums = result;
 
-					vm.appSettings.showRightLogo = false;
-					vm.appSettings.showLeftLogo = false; //causing errors with album info scroll functions
-					vm.appSettings.showInfo = false;
-					vm.appSettings.showNav = false;
-					vm.appSettings.leftPanelView = 'albumCovers';
-					vm.appSettings.rightPanelView = 'albums';
-					//vm.appSettings.showAlbums = true;
-					//vm.appSettings.showArtistsList = false;
-					vm.appSettings.pageTitle = result[0].artistName;
-					//global interval variable
-					albumInfoInterval =  setInterval(albumInfoScroll, 200);
-					history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
+						vm.appSettings.showRightLogo = false;
+						vm.appSettings.showLeftLogo = false; //causing errors with album info scroll functions
+						vm.appSettings.showInfo = false;
+						vm.appSettings.showNav = false;
+						vm.appSettings.leftPanelView = 'albumCovers';
+						vm.appSettings.rightPanelView = 'albums';
+						//vm.appSettings.showAlbums = true;
+						//vm.appSettings.showArtistsList = false;
+						vm.appSettings.pageTitle = result[0].artistName;
+						//global interval variable
+						albumInfoInterval =  setInterval(albumInfoScroll, 200);
+						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		}
@@ -129,27 +142,40 @@ Vue.component('right-albums-list', {
 				url: 'data?action=getAlbum&albumID=' + albumID,
 				type: 'GET',
 				success: (result) => {
-					console.log(result);
-					result = JSON.parse(result);
-					vm.albums = [result];
+					try {
+						console.log(result);
+						result = JSON.parse(result);
+						vm.albums = [result];
 
-					vm.appSettings.showRightLogo = false;
-					vm.appSettings.showLeftLogo = false;
-					vm.appSettings.showInfo = true;
-					vm.appSettings.showNav = false;
-					vm.appSettings.leftPanelView = 'albumCovers';
-					vm.appSettings.rightPanelView = 'albums';
-					//vm.appSettings.showAlbums = true;
-					//vm.appSettings.showArtistsList = false;
-					//vm.appSettings.showAlbumsList = false;
-					vm.appSettings.pageTitle = '';
-					//global interval variable
-					albumInfoInterval =  setInterval(albumInfoScroll, 200);
-					history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
+						vm.appSettings.showRightLogo = false;
+						vm.appSettings.showLeftLogo = false;
+						vm.appSettings.showInfo = true;
+						vm.appSettings.showNav = false;
+						vm.appSettings.leftPanelView = 'albumCovers';
+						vm.appSettings.rightPanelView = 'albums';
+						//vm.appSettings.showAlbums = true;
+						//vm.appSettings.showArtistsList = false;
+						//vm.appSettings.showAlbumsList = false;
+						vm.appSettings.pageTitle = '';
+						//global interval variable
+						albumInfoInterval =  setInterval(albumInfoScroll, 200);
+						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		}
@@ -173,27 +199,40 @@ Vue.component('right-customer-login', {
 					password: password 
 				},
 				success: (result) => {
-					console.log('result: ' + result);
-					var result = JSON.parse(result);
-					if (!result.incorrectLogin) {
-						console.log(result);
-						vm.customer.details = result.details;
-						//Vue.set(vm.customer, 'details', result)
-						if (result.orders) { console.log(result.orders); vm.customer.orders = result.orders; }
-						vm.customer.loggedIn = true;
-						vm.appSettings.rightPanelView = 'customerAccount';
-						vm.appSettings.customerAccountPage = 'welcome';
-						vm.appSettings.leftPanelView = 'userMenu';
-						vm.appSettings.pageTitle = 'User Account';
-					} else {
-						vm.customer.incorrectLogin = true;
-					}
+					try {
+						console.log('result: ' + result);
+						var result = JSON.parse(result);
+						if (!result.incorrectLogin) {
+							console.log(result);
+							vm.customer.details = result.details;
+							//Vue.set(vm.customer, 'details', result)
+							if (result.orders) { console.log(result.orders); vm.customer.orders = result.orders; }
+							vm.customer.loggedIn = true;
+							vm.appSettings.rightPanelView = 'customerAccount';
+							vm.appSettings.customerAccountPage = 'welcome';
+							vm.appSettings.leftPanelView = 'userMenu';
+							vm.appSettings.pageTitle = 'User Account';
+						} else {
+							vm.customer.incorrectLogin = true;
+						}
 
-					console.log(result);
+						console.log(result);
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		},
@@ -265,62 +304,101 @@ Vue.component('right-customer-login', {
 					email: email 
 				},
 				success: (result) => {
-					console.log('result: ' + result);
-					if (result) {
-						vm.errors.formErrors.email = true;
-						vm.errors.formErrors.emailMessage = 'This email is already in use.';
-						return;
-					} 
+					try {
+						console.log('result: ' + result);
+						if (result) {
+							vm.errors.formErrors.email = true;
+							vm.errors.formErrors.emailMessage = 'This email is already in use.';
+							return;
+						} 
 
-					$.ajax({
-						url: 'data/index.php',
-						type: 'POST',
-						data: { 
-							action: 'addUser',
-							firstName: firstName,
-							lastName: lastName,
-							email: email,
-							password: password
-						},
-						success: () => {
-							$.ajax({
-								url: 'data/index.php',
-								type: 'POST',
-								data: { 
-									action: 'userLogin', 
-									email: email, 
-									password: password 
-								},
-								success: (result) => {
-									var result = JSON.parse(result);
-									if (!result.incorrectLogin) {
-										console.log(result);
-										vm.customer.loggedIn = true;
-										vm.customer.details = result;
-										vm.appSettings.rightPanelView = 'customerAccount';
-										vm.appSettings.customerAccountPage = 'welcome';
-										vm.appSettings.pageTitle = 'User Account';
-									} else {
-										vm.customer.incorrectLogin = true;
-									}
+						$.ajax({
+							url: 'data/index.php',
+							type: 'POST',
+							data: { 
+								action: 'addUser',
+								firstName: firstName,
+								lastName: lastName,
+								email: email,
+								password: password
+							},
+							success: () => {
+								try {
+									$.ajax({
+										url: 'data/index.php',
+										type: 'POST',
+										data: { 
+											action: 'userLogin', 
+											email: email, 
+											password: password 
+										},
+										success: (result) => {
+											try {
+												var result = JSON.parse(result);
+												if (!result.incorrectLogin) {
+													console.log(result);
+													vm.customer.loggedIn = true;
+													vm.customer.details = result;
+													vm.appSettings.rightPanelView = 'customerAccount';
+													vm.appSettings.customerAccountPage = 'welcome';
+													vm.appSettings.pageTitle = 'User Account';
+												} else {
+													vm.customer.incorrectLogin = true;
+												}
 
-									console.log(result);
-								},
-								error: (error) => {
-									console.log(error);
-									this.error = true;
+												console.log(result);
+											} catch (error) {
+												vm.errors.errorCode = error.name;
+												vm.appSettings.pageTitle = 'error';
+												vm.appSettings.leftPanelView = 'none';
+												vm.appSettings.rightPanelView = 'errors';
+												console.log(error.message);
+												return;
+											}
+										},
+										error: (error) => {
+											vm.errors.errorCode = error.name;
+											vm.appSettings.pageTitle = 'error';
+											vm.appSettings.leftPanelView = 'none';
+											vm.appSettings.rightPanelView = 'errors';
+											console.log(error.message);
+											return;
+										}
+									});
+								} catch (error) {
+									vm.errors.errorCode = error.name;
+									vm.appSettings.pageTitle = 'error';
+									vm.appSettings.leftPanelView = 'none';
+									vm.appSettings.rightPanelView = 'errors';
+									console.log(error.message);
+									return;
 								}
-							});
-						},
-						error: (error) => {
-							console.log(error);
-							this.error = true;
-						}
-					});
+							},
+							error: (error) => {
+								vm.errors.errorCode = error.name;
+								vm.appSettings.pageTitle = 'error';
+								vm.appSettings.leftPanelView = 'none';
+								vm.appSettings.rightPanelView = 'errors';
+								console.log(error.message);
+								return;
+							}
+						});
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		}
@@ -462,24 +540,37 @@ Vue.component('right-customer-account', {
 					cart: cart
 				},
 				success: (result) => {
-					console.log('place order test');
-					console.log('result: ' + result);
-					console.log('result error: ' + result.error);
-					var result = JSON.parse(result);
-					if (!result.errors) {
-						console.log('test');
-						vm.customer.orders.push(result.order);
-						if (result.address) {
-							vm.customer.details.address = result.address;
-							vm.customer.details.addressID = result.address.addressID;
+					try {
+						console.log('place order test');
+						console.log('result: ' + result);
+						console.log('result error: ' + result.error);
+						var result = JSON.parse(result);
+						if (!result.errors) {
+							console.log('test');
+							vm.customer.orders.push(result.order);
+							if (result.address) {
+								vm.customer.details.address = result.address;
+								vm.customer.details.addressID = result.address.addressID;
+							}
+							vm.appSettings.customerAccountPage = 'orderPlaced';
+							vm.appSettings.pageTitle = '';
 						}
-						vm.appSettings.customerAccountPage = 'orderPlaced';
-						vm.appSettings.pageTitle = '';
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
 					}
 				},
 				error: (error) => {
-					console.log(error);
-					this.error = true;
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
 				}
 			});
 		},
@@ -542,20 +633,33 @@ Vue.component('right-customer-account', {
 						password: loginPassword
 					},
 					success: (result) => {
-						console.log('result: ' + result);
-						if (!result) {
-							vm.errors.formErrors.password = true;
-							vm.errors.formErrors.passwordMessage = 'Incorrect Password.';
+						try {
+							console.log('result: ' + result);
+							if (!result) {
+								vm.errors.formErrors.password = true;
+								vm.errors.formErrors.passwordMessage = 'Incorrect Password.';
+								return;
+							} else {
+								vm.errors.formErrors.password = false;
+								vm.errors.formErrors.passwordMessage = '';
+								editCustomerCallback();
+							}
+						} catch (error) {
+							vm.errors.errorCode = error.name;
+							vm.appSettings.pageTitle = 'error';
+							vm.appSettings.leftPanelView = 'none';
+							vm.appSettings.rightPanelView = 'errors';
+							console.log(error.message);
 							return;
-						} else {
-							vm.errors.formErrors.password = false;
-							vm.errors.formErrors.passwordMessage = '';
-							editCustomerCallback();
 						}
 					},
 					error: (error) => {
-						console.log(error);
-						this.error = true;
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
 					}
 				});
 			}
@@ -656,18 +760,31 @@ Vue.component('right-customer-account', {
 						addressTwo: addressTwo
 					},
 					success: (result) => {
-						console.log('result: ' + result);
-						if (!result.errors) {
-							console.log('customer edit successful');
-							result = JSON.parse(result);
-							vm.customer.details = result.details;
-							vm.success.success = true;
-							vm.success.successMessage = 'User updated successfully.';
+						try {
+							console.log('result: ' + result);
+							if (!result.errors) {
+								console.log('customer edit successful');
+								result = JSON.parse(result);
+								vm.customer.details = result.details;
+								vm.success.success = true;
+								vm.success.successMessage = 'User updated successfully.';
+							}
+						} catch (error) {
+							vm.errors.errorCode = error.name;
+							vm.appSettings.pageTitle = 'error';
+							vm.appSettings.leftPanelView = 'none';
+							vm.appSettings.rightPanelView = 'errors';
+							console.log(error.message);
+							return;
 						}
 					},
 					error: (error) => {
-						console.log(error);
-						this.error = true;
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
 					}
 				});
 			}
