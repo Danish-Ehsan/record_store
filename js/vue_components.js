@@ -401,6 +401,14 @@ Vue.component('right-customer-login', {
 					return;
 				}
 			});
+		},
+		mobileSizeCheck: function() {
+			console.log('mobileSizeCheck test');
+			if ($(window).width() <= 500 ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 });

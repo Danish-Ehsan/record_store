@@ -172,7 +172,7 @@ var vm = new Vue({
 						this.appSettings.showNav = false;
 						this.appSettings.leftPanelView = 'albumCovers';
 						this.appSettings.rightPanelView = 'albums';
-						this.appSettings.pageTitle = 'Featured Albums';
+						this.appSettings.pageTitle = 'featured albums';
 						albumInfoInterval =  setInterval(albumInfoScroll, 200);
 						history.pushState({ appSettings: this.appSettings, albums: this.albums, artists: this.artists }, '');
 						//need delay to allow logo to render
@@ -248,6 +248,13 @@ var vm = new Vue({
 			vm.appSettings.customerAccountPage = 'cart';
 			vm.appSettings.pageTitle = 'my cart';
 			history.pushState({ appSettings: this.appSettings }, '');
+		},
+		mobileSizeCheck: function() {
+			if ($(window).width() <= 500 ) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	},
 	computed: {

@@ -59,26 +59,31 @@ setInterval(function() {
 
 //Center homepage logo vertically
 function getLogoMargin() {
-	console.log('center logo test');
-	//re-store logo element if Vue removes and re-adds it
-	var $logo = $('#logo');
-	logoTopMargin = Math.floor(($window.height() / 2) - ($logo.height() / 2));
-	console.log('logoTopMargin: ' + logoTopMargin);
-	$logo.css('margin-top', logoTopMargin + 'px');
+	if ($window.width() > 500) { 
+		console.log('center logo test');
+		//re-store logo element if Vue removes and re-adds it
+		var $logo = $('#logo');
+		logoTopMargin = Math.floor(($window.height() / 2) - ($logo.height() / 2));
+		console.log('logoTopMargin: ' + logoTopMargin);
+		$logo.css('margin-top', logoTopMargin + 'px');
+	}
 }
 
 function setLogoMargin() {
-	console.log('center logo test 2');
-	var	$logo = $('#logo');
-	if (logoTopMargin) {
-		$logo.css('margin-top', logoTopMargin + 'px');
-	} else {
-		console.log('logoTopMargin2: ' + logoTopMargin);
-		getLogoMargin();
+	if ($window.width() > 500) { 
+		console.log('center logo test 2');
+		var	$logo = $('#logo');
+		if (logoTopMargin) {
+			$logo.css('margin-top', logoTopMargin + 'px');
+		} else {
+			console.log('logoTopMargin2: ' + logoTopMargin);
+			getLogoMargin();
+		}
 	}
 }
 
 getLogoMargin();
+
 
 function scrollToTop() {
 	$('html, body').stop().animate({

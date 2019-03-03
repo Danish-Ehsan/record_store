@@ -33,16 +33,23 @@
 
 			<div id="user-cont">
 				<a id="user-cart-cont" href="#" v-on:click.prevent="loadCustomerCart">
+					<transition name="title-slide-down" mode="out-in">
+						<div 
+							v-if="!(appSettings.pageTitle == 'featured albums' && appSettings.showRightLogo)"
+							id="mobile-page-title"
+							v-bind:key=appSettings.pageTitle
+						>{{ appSettings.pageTitle }}</div>
+					</transition>
 					<transition name="cart-slide-down" mode="out-in">
 						<div id="user-cart-icon" v-if="customer.cart.length">
-							<img v-if="!appSettings.showNav" src="images/rstore_icon_cart.png">
+							<img v-if="!appSettings.showNav || mobileSizeCheck()" src="images/rstore_icon_cart.png">
 							<img v-else src="images/rstore_icon_cart_alt.png">
 						</div>
 					</transition>
 					<transition name="cart-slide-down" mode="out-in">
 						<div 
 							id="user-cart-quantity-cont"
-							v-bind:class="{ dark: appSettings.showNav }"
+							v-bind:class="{ dark: appSettings.showNav && !mobileSizeCheck() }"
 							v-if="customer.cart.length"
 							v-bind:key="totalCartQuantity"
 						>
@@ -55,7 +62,7 @@
 						<a href="#" v-if="!customer.loggedIn" v-on:click.prevent="loadCustomerLogin" key="notLoggedIn">User Login</a>
 						<a href="#" v-else="customer.loggedIn" v-on:click.prevent="loadCustomerHome" key="loggedIn">Hello, {{ customer.details.firstName }}</a>
 					</transition>
-					<img v-if="!appSettings.showNav" src="images/yellow_arrow.png">
+					<img v-if="!appSettings.showNav || mobileSizeCheck()" src="images/yellow_arrow.png">
 					<img v-else src="images/yellow_arrow_alt.png">
 				</div>
 			</div>
@@ -196,40 +203,42 @@
 							<transition name="slide-delay" mode="out-in">
 								<div 
 									v-if="appSettings.loginForm == 'customerLogin'" 
-									id="right-customer-login"
-									key="right-customer-login"
+									id="customer-login-cont"
+									key="customer-login-cont"
 								>
 									<transition appear name="slide-up-title">
 										<div class="page-title">{{ appSettings.pageTitle }}</div>
 									</transition>
-									<form 
-										v-on:submit.prevent="submitLogin"
-									>
-						                <input type="hidden" name="action" value="login">
+									<div id="customer-login-form">
+										<form 
+											v-on:submit.prevent="submitLogin"
+										>
+							                <input type="hidden" name="action" value="login">
 
-						                <label>Email:</label>
-						                <input type="text" name="loginEmail" id="login-email"><br>
-						                
-						                <label>Password:</label>
-						                <input type="password" name="loginPassword" id="login-password"><br>
+							                <label>Email:</label>
+							                <input type="text" name="loginEmail" id="login-email"><br>
+							                
+							                <label>Password:</label>
+							                <input type="password" name="loginPassword" id="login-password"><br>
 
-						                <div 
-						                	v-if="customer.incorrectLogin" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">Incorrect email/password combination.</span><br>
-						                </div>
+							                <div 
+							                	v-if="customer.incorrectLogin" 
+							                	class="login-error-cont"
+							                >
+								                <label v-if="!mobileSizeCheck()">&nbsp;</label>
+								                <span class="login-error">Incorrect email/password combination.</span><br>
+							                </div>
 
-						                <label>&nbsp;</label>
-						                <input type="submit" value="Login" class="submit-button artist-form">
+							                <label v-if="!mobileSizeCheck()">&nbsp;</label>
+							                <input type="submit" value="Login" class="submit-button submit-button-login">
 
-						                
-						                <button 
-						                	v-on:click.prevent="showRegisterForm"
-						                	class="submit-button register-button artist-form"
-						                >Register</button>
-						            </form>
+							                
+							                <button 
+							                	v-on:click.prevent="showRegisterForm"
+							                	class="submit-button register-button submit-button-login"
+							                >Register</button>
+							            </form>
+							        </div>
 								</div>
 								<div 
 									v-else-if="appSettings.loginForm == 'createCustomer'"
@@ -239,67 +248,69 @@
 									<transition appear name="slide-up-title">
 										<div class="page-title">{{ appSettings.pageTitle }}</div>
 									</transition>
-									<form 
-										v-on:submit.prevent="createCustomer"
-									>
-										<label>First Name:</label>
-						                <input type="text" name="firstName" id="first-name"><br>
+									<div id="customer-create-form">
+										<form 
+											v-on:submit.prevent="createCustomer"
+										>
+											<label>First Name:</label>
+							                <input type="text" name="firstName" id="first-name"><br>
 
-						                <div 
-						                	v-if="errors.formErrors.firstName" 
-						                	class="login-error-cont"
-						                >
+							                <div 
+							                	v-if="errors.formErrors.firstName" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
+							                </div>
+
+							                <label>Last Name:</label>
+							                <input type="text" name="lastName" id="last-name"><br>
+
+							                <div 
+							                	v-if="errors.formErrors.lastName" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
+							                </div>
+
+							                <label>Email:</label>
+							                <input type="text" name="createLoginEmail" id="create-login-email"><br>
+
+							                <div 
+							                	v-if="errors.formErrors.email" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
+							                </div>
+							                
+							                <label>Password:</label>
+							                <input type="password" name="createLoginPassword" id="create-login-password"><br>
+
+							                <div 
+							                	v-if="errors.formErrors.password" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
+							                </div>
+
+							                <label>Confirm Password:</label>
+							                <input type="password" name="createConfirmPassword" id="create-confirm-password"><br>
+
+							                <div 
+							                	v-if="errors.formErrors.passwordTwo" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
+							                </div>
+
 							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
-						                </div>
-
-						                <label>Last Name:</label>
-						                <input type="text" name="lastName" id="last-name"><br>
-
-						                <div 
-						                	v-if="errors.formErrors.lastName" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
-						                </div>
-
-						                <label>Email:</label>
-						                <input type="text" name="createLoginEmail" id="create-login-email"><br>
-
-						                <div 
-						                	v-if="errors.formErrors.email" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
-						                </div>
-						                
-						                <label>Password:</label>
-						                <input type="password" name="createLoginPassword" id="create-login-password"><br>
-
-						                <div 
-						                	v-if="errors.formErrors.password" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
-						                </div>
-
-						                <label>Confirm Password:</label>
-						                <input type="password" name="createConfirmPassword" id="create-confirm-password"><br>
-
-						                <div 
-						                	v-if="errors.formErrors.passwordTwo" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
-						                </div>
-
-						                <label>&nbsp;</label>
-						                <input type="submit" value="Register User" class="submit-button artist-form">
-						            </form>
+							                <input type="submit" value="Register User" class="submit-button submit-button-login">
+							            </form>
+							        </div><!--#customer-create-form-->
 								</div>
 							</transition>
 						</div>
@@ -316,8 +327,8 @@
 							<transition name="slide-delay" mode="out-in">
 								<div
 									v-if="appSettings.customerAccountPage == 'welcome'"
-									id="right-customer-welcome"
-									key="right-customer-welcome"
+									id="customer-welcome"
+									key="customer-welcome"
 								>
 									<transition appear name="slide-up-title">
 										<div class="page-title">{{ appSettings.pageTitle }}</div>
@@ -375,127 +386,129 @@
 								</div>
 								<div 
 									v-else-if="appSettings.customerAccountPage == 'editCustomer'"
-									id="right-customer-edit"
-									key="right-customer-edit"
+									id="customer-edit"
+									key="customer-edit"
 								>
 									<transition appear name="slide-up-title">
 										<div class="page-title">{{ appSettings.pageTitle }}</div>
 									</transition>
-									<form 
-										v-on:submit.prevent="editCustomer"
-									>
-										<label>*First Name:</label>
-						                <input type="text" name="firstName" id="edit-first-name" v-bind:value="customer.details.firstName"><br>
+									<div id="customer-edit-form">
+										<form 
+											v-on:submit.prevent="editCustomer"
+										>
+											<label>*First Name:</label>
+							                <input type="text" name="firstName" id="edit-first-name" v-bind:value="customer.details.firstName"><br>
 
-						                <div 
-						                	v-if="errors.formErrors.firstName" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
-						                </div>
+							                <div 
+							                	v-if="errors.formErrors.firstName" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
+							                </div>
 
-						                <label>*Last Name:</label>
-						                <input type="text" name="lastName" id="edit-last-name" v-bind:value="customer.details.lastName"><br>
+							                <label>*Last Name:</label>
+							                <input type="text" name="lastName" id="edit-last-name" v-bind:value="customer.details.lastName"><br>
 
-						                <div 
-						                	v-if="errors.formErrors.lastName" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
-						                </div>
+							                <div 
+							                	v-if="errors.formErrors.lastName" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
+							                </div>
 
-						                <label>*Email:</label>
-						                <input type="text" name="email" id="edit-email" v-bind:value="customer.details.emailAddress"><br>
+							                <label>*Email:</label>
+							                <input type="text" name="email" id="edit-email" v-bind:value="customer.details.emailAddress"><br>
 
-						                <div 
-						                	v-if="errors.formErrors.email" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
-						                </div>
-						                
-						                <label>*Current Password:</label>
-						                <input type="password" name="loginPassword" id="edit-login-password"><br>
+							                <div 
+							                	v-if="errors.formErrors.email" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
+							                </div>
+							                
+							                <label>*Current Password:</label>
+							                <input type="password" name="loginPassword" id="edit-login-password"><br>
 
-						                <div 
-						                	v-if="errors.formErrors.password" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
-						                </div>
+							                <div 
+							                	v-if="errors.formErrors.password" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
+							                </div>
 
-						                <label>New Password:</label>
-						                <input type="password" name="newPassword" id="edit-new-password"><br>
+							                <label>New Password:</label>
+							                <input type="password" name="newPassword" id="edit-new-password"><br>
 
-						                <div 
-						                	v-if="errors.formErrors.passwordTwo" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
-						                </div>
+							                <div 
+							                	v-if="errors.formErrors.passwordTwo" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
+							                </div>
 
-					                	<label>&nbsp;</label><br>
-						                <label>Country:</label>
-						                <input type="text" name="country" id="edit-country" v-bind:value="customer.details.address.country"><br>
-						                <div 
-						                	v-if="errors.formErrors.country" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.countryMessage }}</span><br>
-						                </div>
-						                <label>City:</label>
-						                <input type="text" name="city" id="edit-city" v-bind:value="customer.details.address.city"><br>
-						                <div 
-						                	v-if="errors.formErrors.city" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.cityMessage }}</span><br>
-						                </div>
-						                <label>Postal/Zip Code:</label>
-						                <input type="text" name="postalCode" id="edit-postal-code" v-bind:value="customer.details.address.postalCode"><br>
-						                <div 
-						                	v-if="errors.formErrors.postalCode" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.postalCodeMessage }}</span><br>
-						                </div>
-						                <label>Address Line 1:</label>
-						                <input type="text" name="addressOne" id="edit-address-one" v-bind:value="customer.details.address.line1"><br>
-						                <div 
-						                	v-if="errors.formErrors.addressOne" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.addressOneMessage }}</span><br>
-						                </div>
-						                <label>Address Line 2:</label>
-						                <input type="text" name="addressTwo" id="edit-address-two" v-bind:value="customer.details.address.line2"><br>
-						                <div 
-						                	v-if="errors.formErrors.addressTwo" 
-						                	class="login-error-cont"
-						                >
-							                <label>&nbsp;</label>
-							                <span class="login-error">{{ errors.formErrors.addressTwoMessage }}</span><br>
-						                </div>
+						                	<label>&nbsp;</label><br>
+							                <label>Country:</label>
+							                <input type="text" name="country" id="edit-country" v-bind:value="customer.details.address.country"><br>
+							                <div 
+							                	v-if="errors.formErrors.country" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.countryMessage }}</span><br>
+							                </div>
+							                <label>City:</label>
+							                <input type="text" name="city" id="edit-city" v-bind:value="customer.details.address.city"><br>
+							                <div 
+							                	v-if="errors.formErrors.city" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.cityMessage }}</span><br>
+							                </div>
+							                <label>Postal/Zip Code:</label>
+							                <input type="text" name="postalCode" id="edit-postal-code" v-bind:value="customer.details.address.postalCode"><br>
+							                <div 
+							                	v-if="errors.formErrors.postalCode" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.postalCodeMessage }}</span><br>
+							                </div>
+							                <label>Address Line 1:</label>
+							                <input type="text" name="addressOne" id="edit-address-one" v-bind:value="customer.details.address.line1"><br>
+							                <div 
+							                	v-if="errors.formErrors.addressOne" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.addressOneMessage }}</span><br>
+							                </div>
+							                <label>Address Line 2:</label>
+							                <input type="text" name="addressTwo" id="edit-address-two" v-bind:value="customer.details.address.line2"><br>
+							                <div 
+							                	v-if="errors.formErrors.addressTwo" 
+							                	class="login-error-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="login-error">{{ errors.formErrors.addressTwoMessage }}</span><br>
+							                </div>
 
-						                <label>&nbsp;</label>
-						                <input type="submit" value="Save Changes" class="submit-button artist-form">
-						                <div 
-						                	v-if="success.success"
-						                	class="form-success-cont"
-						                >
 							                <label>&nbsp;</label>
-							                <span class="form-success">{{ success.successMessage }}</span><br>
-						                </div>
-						            </form>
+							                <input type="submit" value="Save Changes" class="submit-button submit-button-login">
+							                <div 
+							                	v-if="success.success"
+							                	class="form-success-cont"
+							                >
+								                <label>&nbsp;</label>
+								                <span class="form-success">{{ success.successMessage }}</span><br>
+							                </div>
+							            </form>
+							        </div><!--#customer-edit-form-->
 								</div><!--createCustomer-->
 								<div
 									v-else-if="appSettings.customerAccountPage == 'checkout'"

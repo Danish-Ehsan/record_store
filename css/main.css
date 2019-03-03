@@ -59,6 +59,12 @@ html, body {
   height: 100%;
   font-family: benton-sans; }
 
+#container {
+  height: 100%; }
+
+#vueApp {
+  height: 100%; }
+
 /*-----------------------
 OVERRIDE CLASSES
 ------------------------*/
@@ -133,6 +139,9 @@ NAVIGATION
 /*-----------------------
 MAIN USER BUTTONS
 ------------------------*/
+#mobile-page-title {
+  display: none; }
+
 #user-cont {
   display: flex;
   align-items: center;
@@ -147,21 +156,21 @@ MAIN USER BUTTONS
 
 #user-cart-icon {
   display: inline-block;
-  height: 17px;
+  height: 19px;
   margin-right: 3px; }
   #user-cart-icon img {
     height: 100%; }
 
 #user-cart-quantity-cont {
   display: flex;
-  width: 13px;
-  height: 13px;
+  width: 19px;
+  height: 19px;
   justify-content: center;
   position: relative;
   align-items: center;
-  font-size: 10pt;
+  font-size: 12pt;
   font-weight: bold;
-  padding: 2px;
+  padding: 0px;
   border-radius: 100%;
   text-align: center;
   vertical-align: middle;
@@ -177,7 +186,7 @@ MAIN USER BUTTONS
 #user-name {
   display: inline;
   position: relative;
-  font-size: 11pt;
+  font-size: 12pt;
   margin-left: 10px;
   margin-top: 2px; }
   #user-name a {
@@ -335,7 +344,8 @@ RIGHT PANEL
   color: #f6c115;
   margin-top: 50px;
   max-height: 450px;
-  overflow: scroll; }
+  overflow: scroll;
+  line-height: 1.5; }
   .tracklist li:nth-child(even) {
     background-color: #a02938; }
   .tracklist li:nth-child(odd) {
@@ -362,7 +372,7 @@ RIGHT PANEL
   font-weight: bold; }
 
 .page-title {
-  top: 0px;
+  top: 150px;
   left: 93px;
   transform-origin: 0% 0%;
   transition: all 0.25s linear 0.7s; }
@@ -370,45 +380,70 @@ RIGHT PANEL
 /*-----------------------
 ARTISTS/ALBUMS LIST PAGE
 ------------------------*/
-#right-artists-list, #right-customer-login, #right-customer-account, #right-customer-create, #right-albums-list {
+#right-artists-list, #right-albums-list, #right-customer-login, #right-customer-account {
   width: 100%;
   height: 100%;
   position: relative;
-  margin: 150px auto 150px auto;
-  padding-left: 50px;
+  padding-top: 150px;
+  box-sizing: border-box;
   color: #f6c115;
   text-transform: uppercase;
   font-weight: bold;
   font-size: 38pt;
   letter-spacing: 1px; }
-  #right-artists-list ul, #right-customer-login ul, #right-customer-account ul, #right-customer-create ul, #right-albums-list ul {
-    width: 40%;
+
+#artist-lists, #albums-lists {
+  position: relative;
+  display: block;
+  width: 70%;
+  height: 100%;
+  padding-bottom: 150px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  overflow: scroll;
+  white-space: nowrap; }
+  #artist-lists ul, #albums-lists ul {
+    white-space: normal;
+    width: 45%;
     min-width: 300px;
     display: inline-block;
     vertical-align: top; }
-    #right-artists-list ul li, #right-customer-login ul li, #right-customer-account ul li, #right-customer-create ul li, #right-albums-list ul li {
+    #artist-lists ul:first-of-type, #albums-lists ul:first-of-type {
+      margin-right: 10%; }
+    #artist-lists ul li, #albums-lists ul li {
       margin: 10px 0;
       cursor: pointer; }
-      #right-artists-list ul li:hover, #right-customer-login ul li:hover, #right-customer-account ul li:hover, #right-customer-create ul li:hover, #right-albums-list ul li:hover {
+      #artist-lists ul li:hover, #albums-lists ul li:hover {
         color: white; }
-
-#artist-lists, #albums-lists {
-  width: 80%;
-  margin: 0 auto; }
 
 /*-----------------------
 USER PAGES
 ------------------------*/
-#right-customer-login, #right-customer-account, #right-customer-create {
-  overflow: scroll; }
-  #right-customer-login form, #right-customer-login h2, #right-customer-account form, #right-customer-account h2, #right-customer-create form, #right-customer-create h2 {
-    height: 100%;
+#right-customer-login, #right-customer-account {
+  margin-top: 0; }
+  #right-customer-login form, #right-customer-login h2, #right-customer-account form, #right-customer-account h2 {
     margin: 0 auto; }
-  #right-customer-login form, #right-customer-account form, #right-customer-create form {
+  #right-customer-login form, #right-customer-account form {
     font-size: 0pt; }
 
-#right-customer-template {
+#right-customer-login {
   height: 100%; }
+
+#customer-login-form, #customer-create-form {
+  margin-left: 70px; }
+
+#customer-edit {
+  height: 100%; }
+
+#customer-edit-form {
+  margin-left: 70px;
+  height: 100%;
+  overflow: scroll;
+  padding-bottom: 100px;
+  box-sizing: border-box; }
+
+#customer-welcome {
+  margin-left: 150px; }
 
 label {
   color: white;
@@ -445,14 +480,12 @@ input:disabled, .edit-customer-button:disabled {
   cursor: pointer;
   background-color: #f0a900;
   color: #942932;
-  margin-top: 20px;
   width: 150px;
   display: block;
-  margin-left: 35px; }
-  .submit-button.artist-form, .artist-form.edit-customer-button, .submit-button.checkout-form, .checkout-form.edit-customer-button {
-    margin-top: 0;
-    margin-left: 5px;
-    display: inline; }
+  margin-left: 35px;
+  margin-top: 0;
+  margin-left: 5px;
+  display: inline; }
 
 .register-button {
   border: none;
@@ -478,8 +511,10 @@ input:disabled, .edit-customer-button:disabled {
 USER CART
 ------------------------*/
 #right-customer-cart, #right-customer-checkout, #right-customer-orders {
-  height: 80%;
-  overflow: scroll; }
+  height: 100%;
+  overflow: scroll;
+  padding-bottom: 100px;
+  box-sizing: border-box; }
 
 #customer-cart-cont {
   height: 80%;
@@ -559,9 +594,8 @@ USER CART
   font-weight: bold;
   font-family: benton-sans;
   text-transform: uppercase;
-  vertical-align: center;
   padding: 5px 30px;
-  margin: 10px 30px;
+  margin: 13px 30px;
   float: right;
   border: none; }
 
@@ -587,7 +621,8 @@ CHECKOUT
   font-size: 14pt;
   color: white; }
   #checkout-items-list li, .order-items-list li {
-    cursor: default !important; }
+    cursor: default !important;
+    margin-bottom: 7px; }
     #checkout-items-list li span, .order-items-list li span {
       text-transform: lowercase;
       color: #f6c115; }
@@ -746,6 +781,18 @@ VUE ANIMATION
   opacity: 0;
   top: 20px; }
 
+.title-slide-down-enter-active, .title-slide-down-leave-active {
+  top: 10px;
+  transition: all 0.2s; }
+
+.title-slide-down-enter {
+  opacity: 0;
+  top: -10px; }
+
+.title-slide-down-leave-to {
+  opacity: 0;
+  top: 30px; }
+
 .slide-delay-leave-active {
   position: relative;
   left: 0;
@@ -764,5 +811,266 @@ VUE ANIMATION
 .slide-up-title-enter, .slide-up-title-leave-to {
   position: relative;
   top: 100%; }
+
+/*************************
+MEDIA QUERIES
+*************************/
+@media screen and (max-width: 1200px) {
+  /*-----------------------
+  LEFT PANEL
+  ------------------------*/
+  #logo {
+    width: 70%; }
+
+  /*-----------------------
+  RIGHT PANEL
+  ------------------------*/
+  #store-name {
+    width: 70%;
+    margin: 0 auto; }
+
+  .album-info {
+    width: 70%;
+    margin-left: 15%; }
+
+  #artist-name {
+    font-size: 28pt; }
+
+  #album-name {
+    font-size: 40pt; }
+
+  .home-page-title, .page-title {
+    font-size: 60pt; }
+
+  .page-title {
+    left: 70px; } }
+@media screen and (max-width: 1024px) {
+  /*-----------------------
+  LEFT PANEL
+  ------------------------*/
+  #left-panel {
+    width: 35%; }
+
+  /*-----------------------
+  RIGHT PANEL
+  ------------------------*/
+  #right-panel {
+    width: 65%; }
+
+  #store-name {
+    width: 60%; }
+
+  #artist-name {
+    font-size: 22pt;
+    margin-bottom: -3px; }
+
+  #album-name {
+    font-size: 32pt; }
+
+  .yellow-arrow {
+    margin-bottom: 0;
+    position: relative;
+    top: 2px; }
+
+  .tracklist li {
+    font-size: 11pt; }
+    .tracklist li span {
+      color: white;
+      padding-left: 10px; }
+
+  /*-----------------------
+  ARTIST/ALBUM LIST
+  ------------------------*/
+  #right-artists-list, #right-albums-list {
+    font-size: 34pt;
+    padding-top: 120px; }
+
+  #artist-lists ul, #albums-lists ul {
+    display: block; }
+    #artist-lists ul li, #albums-lists ul li {
+      margin: 8px 0; } }
+@media screen and (max-width: 500px) {
+  /*-----------------------
+  TOP PANEL
+  ------------------------*/
+  #left-panel {
+    width: 100%;
+    min-height: 0;
+    height: 40%;
+    background-color: initial;
+    box-shadow: none;
+    z-index: 100;
+    transition: height 0.2s ease-in 0.2s; }
+    #left-panel.closed {
+      height: 20%;
+      width: 100%; }
+
+  .left-album-covers {
+    height: 100%;
+    margin-top: 10px;
+    z-index: 100; }
+
+  #logo {
+    height: 65%;
+    width: auto;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%); }
+    #logo img {
+      height: 100%;
+      width: auto; }
+
+  .album-image-cont {
+    height: 65%;
+    width: auto;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100; }
+    .album-image-cont img {
+      height: 100%;
+      width: auto; }
+
+  /*-----------------------
+  USER PANEL
+  ------------------------*/
+  #user-cont {
+    z-index: 103;
+    width: 100%;
+    background-color: #942932;
+    justify-content: flex-end;
+    top: 0;
+    right: 0;
+    padding: 10px 0; }
+
+  #user-cart-icon {
+    height: 16px; }
+
+  #user-cart-quantity-cont {
+    width: 17px;
+    height: 17px;
+    font-size: 11pt; }
+
+  #user-name {
+    margin-right: 10px;
+    font-size: 11pt; }
+
+  #mobile-page-title {
+    display: inline-block;
+    position: absolute;
+    left: 20px;
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 12.5pt;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.7); }
+
+  /*-----------------------
+  NAVIGATION
+  ------------------------*/
+  #nav-cont {
+    z-index: 102; }
+
+  #nav-button {
+    top: 40%;
+    z-index: 103;
+    font-size: 16pt;
+    padding: 5px 12px; }
+
+  /*-----------------------
+  BOTTOM PANEL
+  ------------------------*/
+  #right-panel {
+    width: 100%;
+    height: 60%;
+    top: 40%;
+    z-index: 101;
+    box-shadow: 0px 2px 10px 6px rgba(0, 0, 0, 0.1) inset;
+    transition: all 0.2s ease-in 0.2s; }
+    #right-panel.open {
+      width: 100%;
+      height: 100%;
+      top: 0; }
+
+  #store-name {
+    width: 70%; }
+
+  .home-page-title, .page-title {
+    display: none; }
+
+  .right-album-info {
+    text-align: center;
+    z-index: 102; }
+
+  .album-info {
+    z-index: 104;
+    top: 25%;
+    transform: none;
+    width: 75%;
+    margin: 0 auto;
+    position: relative; }
+
+  #artist-name {
+    margin-bottom: 1px; }
+
+  #album-name img {
+    display: block;
+    margin: 0 auto;
+    transform: rotate(90deg);
+    margin-top: -5px; }
+
+  .more-info {
+    margin-bottom: 50px; }
+    .more-info.active {
+      margin-bottom: 150px; }
+
+  .tracklist {
+    max-height: none;
+    text-align: left; }
+
+  /*-----------------------
+  ARTIST/ALBUM LIST
+  ------------------------*/
+  #right-artists-list, #right-albums-list {
+    font-size: 24pt; }
+
+  #artists-lists, #albums-lists {
+    width: 75%; }
+    #artists-lists ul, #albums-lists ul {
+      width: 100%;
+      min-width: 0; }
+      #artists-lists ul li, #albums-lists ul li {
+        margin: 8px 0; }
+
+  /*-----------------------
+  USER PAGES
+  ------------------------*/
+  #customer-login-form, #customer-create-form {
+    width: 75%;
+    margin: 0 auto; }
+    #customer-login-form form, #customer-create-form form {
+      width: 100%; }
+
+  input, .edit-customer-button, select {
+    width: 100%;
+    margin: 0 0 20px 0;
+    box-sizing: border-box; }
+
+  label {
+    text-align: left;
+    margin-bottom: 10px; }
+
+  .submit-button, .edit-customer-button {
+    margin: 0 0 10px 0; }
+
+  .submit-button-login {
+    width: 100%;
+    margin-top: 5px; }
+
+  input[type=submit], [type=submit].edit-customer-button {
+    margin-top: 10px; } }
 
 /*# sourceMappingURL=main.css.map */
