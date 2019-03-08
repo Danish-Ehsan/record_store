@@ -1,5 +1,6 @@
 
 var $window = $(window);
+var $leftpanel = $('#left-panel');
 var $pageTitle = $('.home-page-title');
 //var $logo = $('#logo');
 var logoTopMargin;
@@ -8,10 +9,16 @@ var logoTopMargin;
 
 //Album info scroll events
 function albumInfoScroll() {
+	var scrollMark;
+	if ($window.width() > 500) {
+		scrollMark = $window.scrollTop() + ($window.height()/1.5);
+	} else {
+		scrollMark = $window.scrollTop() + ($leftpanel.height()/1.5);
+	}
 	//$albumCont var needs to refresh after it is deleted and added back by vue
 	var $albumCont = $('.album-image-cont');
 	if (!($albumCont.html() == undefined)) {
-		if ($albumCont.eq(0).offset().top < ($window.scrollTop() + ($window.height()/1.5))	) {
+		if ($albumCont.eq(0).offset().top < scrollMark) {
 			if (vm.appSettings.showRightLogo) {
 				vm.appSettings.showRightLogo = false;
 			}
@@ -24,7 +31,7 @@ function albumInfoScroll() {
 	}
 	if (!($albumCont.html() == undefined)) {
 		$albumCont.each(function(index) {
-			if ( $(this).offset().top < ($window.scrollTop() + ($window.height()/1.5)) && ( $(this).next().html() == undefined || $(this).next().offset().top > ($window.scrollTop() + ($window.height()/1.5))) ) {
+			if ( $(this).offset().top < scrollMark && ( $(this).next().html() == undefined || $(this).next().offset().top > scrollMark) ) {
 				//need second condition to deal with Vue adding containers before removing them
 				if (vm.appSettings.currentAlbum != index && vm.albums.length >= index) {
 					vm.appSettings.showInfo = false;
@@ -103,3 +110,46 @@ window.onpopstate = function() {
 	if (history.state.appSettings) vm.appSettings = history.state.appSettings;
 }
 
+
+//reset all form errors
+function resetFormErrors() {
+	console.log('resetFormErrors check');
+	vm.customer.errors.forms = {
+				firstName: false,
+				firstNameMessage: '',
+				lastName: false,
+				lastNameMessage: '',
+				country: false,
+				countryMessage: '',
+				city: false,
+				cityMessage: '',
+				postalCode: false,
+				postalCodeMessage: '',
+				addressOne: false,
+				addressOneMessage: '',
+				addressTwo: false,
+				addressTwoMessage: ''
+			};
+	vm.errors.formErrors = {
+				email: false,
+				emailMessage: '',
+				password: false,
+				passwordMessage: '',
+				passwordTwo: false,
+				passwordTwoMessage: '',
+				firstName: false,
+				firstNameMessage: '',
+				lastName: false,
+				lastNameMessage: '',
+				country: false,
+				countryMessage: '',
+				city: false,
+				cityMessage: '',
+				postalCode: false,
+				postalCodeMessage: '',
+				addressOne: false,
+				addressOneMessage: '',
+				addressTwo: false,
+				addressTwoMessage: ''
+			};
+}

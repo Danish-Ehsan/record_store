@@ -234,6 +234,9 @@ LEFT PANEL
 		top: 50%;
 		transform: translateY(-50%);
 	}
+	&:last-of-type {
+		margin-bottom: 30%;
+	}
 	img {
 		width: 100%;
 	}
@@ -538,7 +541,7 @@ input:first-of-type {
 
 input:disabled {
 	/*cursor: not-allowed;*/
-	background-color: rgba(0,0,0,0);
+	background-color: $primary-red;
 }
 
 .submit-button {
@@ -589,7 +592,7 @@ input:disabled {
 USER CART
 ------------------------*/
 
-#right-customer-cart, #right-customer-checkout, #right-customer-orders {
+#right-customer-cart, #right-customer-checkout, #right-customer-orders, #right-customer-order-placed {
 	height: 100%;
 	overflow: scroll;
 	padding-bottom: 100px;
@@ -651,7 +654,7 @@ USER CART
 .cart-quantity-cont {
 	display: inline;
 	display: flex;
-	align-items: center
+	align-items: center;
 }
 
 .cart-quantity-input {
@@ -717,7 +720,7 @@ CHECKOUT
 
 #checkout-order-cont {
 	padding: 20px 30px;
-	border: 1px solid $primary-gold;
+	border: 1px solid $dark-gold;
 }
 
 #checkout-items-list {
@@ -1106,9 +1109,85 @@ MEDIA QUERIES
 		}
 	}
 
+	/*-----------------------
+	USER PAGES
+	------------------------*/
+
+	#customer-login-cont, #customer-create-cont {
+		height: 100%;
+		padding-bottom: 50px;
+		overflow: scroll;
+		box-sizing: border-box;
+	}
+
+	#customer-login-form, #customer-create-form, #customer-edit-form {
+		width: 60%;
+		margin: 0 auto;
+		form {
+			width: 100%;
+		}
+	}
+
+	#customer-login-form form {
+		input[type=text], input[type=password] {
+			margin-bottom: 20px;
+		}
+	}
+
+	#customer-create-form input {
+		margin-bottom: 10px;
+	}
+
+	input, select {
+		width: 100%;
+		margin: 0 0 10px 0;
+		box-sizing: border-box;
+	}
+
+	label {
+		display: block;
+		text-align: left;
+		margin-bottom: 10px;
+	}
+
+	.empty-label {
+		display: none;
+	}
+
+	.login-error-cont {
+		margin-bottom: 20px;
+	}
+
+	.submit-button {
+		margin: 0 0 10px 0;
+	}
+
+	.submit-button-login {
+		width: 100%;
+		margin-top: 5px;
+	}
+
+	input[type=submit] {
+		margin-top: 10px;
+	}
+
+	#right-customer-account {
+		padding-top: 60px;
+	}
+
+	#customer-welcome {
+		margin: 0 auto;
+		text-align: center;
+		font-size: 26pt;
+	}
+
 }
 
 @media screen and (max-width: 500px) {
+
+	h2 {
+		font-size: 28pt;
+	}
 
 	/*-----------------------
 	TOP PANEL
@@ -1123,8 +1202,12 @@ MEDIA QUERIES
 		z-index: 100;
 		transition: height 0.2s ease-in 0.2s;
 		&.closed {
-			height: 20%;
+			height: 0;
 			width: 100%;
+		}
+		&.narrow {
+			width: 100%;
+			height: 20%;
 		}
 	}
 
@@ -1141,6 +1224,7 @@ MEDIA QUERIES
 		position: relative;
 		top: 50%;
 		transform: translateY(-50%);
+		margin-bottom: 170px;
 		img {
 			height: 100%;
 			width: auto;
@@ -1150,14 +1234,21 @@ MEDIA QUERIES
 	.album-image-cont {
 		height: 65%;
 		width: auto;
+		margin: 150px auto;
 		text-align: center;
 		position: relative;
-		top: 50%;
-		transform: translateY(-50%);
 		z-index: 100;
 		img {
 			height: 100%;
 			width: auto;
+		}
+		&:first-of-type {
+			margin-top: 0;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+		&:last-of-type {
+			margin-bottom: 130%;
 		}
 	}
 
@@ -1198,7 +1289,7 @@ MEDIA QUERIES
 		color: #ffffff;
 		text-transform: uppercase;
 		font-weight: bold;
-		font-size: 12.5pt;
+		font-size: 13pt;
 		letter-spacing: 1.5px;
 		color: rgba(255,255,255,0.7);
 	}
@@ -1218,6 +1309,51 @@ MEDIA QUERIES
 		padding: 5px 12px;
 	}
 
+	#nav-menu {
+		&.active {
+			width: 170px;
+		}
+		ul {
+			font-size: 24pt;
+			li {
+				padding: 4px 10px;
+			}
+		}
+	}
+
+	#user-menu-cont {
+		width: 100%;
+		height: 100%;
+		padding: 37px 0 0 0;
+		box-sizing: border-box;
+		top: 0;
+		transform: none;
+	}
+
+	#user-menu {
+		width: 90%;
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 14pt;
+		margin: 0 auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		li {
+			display: inline;
+			padding: 0 7px;
+			margin: 2px 0;
+			border-left: 2px solid $primary-gold;
+			&:first-of-type {
+				border-left: none;
+			}
+			a {
+				color: #ffffff;
+			}
+		}
+	}
+
 	/*-----------------------
 	BOTTOM PANEL
 	------------------------*/
@@ -1225,14 +1361,18 @@ MEDIA QUERIES
 	#right-panel {
 		width: 100%;
 		height: 60%;
-		top: 40%;
+		top: initial;
+		bottom: 0;
 		z-index: 101;
 		box-shadow: 0px 2px 10px 6px rgba(0,0,0,0.1) inset;
 		transition: all 0.2s ease-in 0.2s;
 		&.open {
 			width: 100%;
-			height: 100%;
-			top: 0;
+			height: 94%;
+		}
+		&.wide {
+			width: 100%;
+			height: 80%;
 		}
 	}
 
@@ -1290,6 +1430,7 @@ MEDIA QUERIES
 
 	#right-artists-list, #right-albums-list {
 		font-size: 24pt;
+		padding-top: 90px;
 	}
 
 	#artists-lists, #albums-lists {
@@ -1308,35 +1449,132 @@ MEDIA QUERIES
 	USER PAGES
 	------------------------*/
 
-	#customer-login-form, #customer-create-form {
+	#right-customer-login {
+		padding-top: 110px;
+	}
+
+	#customer-login-form, #customer-create-form, #customer-edit-form {
 		width: 75%;
-		margin: 0 auto;
-		form {
-			width: 100%;
+	}
+
+	/*-----------------------
+	USER CART
+	------------------------*/
+
+	.cart-item-cont {
+		justify-content: center;
+		width: 100%;
+		height: auto;
+		box-sizing: border-box;
+		padding: 30px;
+	}
+
+	.cart-album-img {
+		width: 120px;
+		height: 120px;
+		img {
+			min-width: 100%;
+			min-height: 100%;
 		}
 	}
 
-	input, select {
+	.cart-album-title-cont {
+		padding-left: 0;
+		text-align: center;
 		width: 100%;
-		margin: 0 0 20px 0;
-		box-sizing: border-box;
+		display: inline-block;
+		padding: 10px 0 20px 0;
 	}
 
-	label {
-		text-align: left;
-		margin-bottom: 10px;
+	.cart-artist-name {
+		font-size: 16pt;
+		margin-bottom: 2px;
 	}
 
-	.submit-button {
-		margin: 0 0 10px 0;
+	.cart-album-name {
+		font-size: 20pt;
 	}
 
-	.submit-button-login {
+	.cart-album-price {
+		font-size: 20pt;
+		width: auto;
+		padding-left: 0;
+		display: inline;
+	}
+
+	.cart-quantity-cont {
+		padding: 0 10px;
+	}
+
+	.cart-quantity-input {
+		width: 25px;
+	}
+
+	.cart-quantity-icon {
+	}
+
+	.cart-icon {
+	}
+
+	.cart-icon-delete {
+		padding: 0;
+	}
+
+	#cart-total {
+		font-size: 20pt;
+		display: block;
+		padding: 10px 0;
+		border: 1px solid $primary-gold;
+		text-align: center;
+		margin: 25px 0 15px 0;
+	}
+
+	#cart-checkout-btn {
+		font-size: 20pt;
 		width: 100%;
-		margin-top: 5px;
+		display: block;
+		margin: 0;
 	}
 
-	input[type=submit] {
+	/*-----------------------
+	ORDER PAGE
+	------------------------*/
+
+	#order-cont {
+
+	}
+
+	.customer-order-number {
+		display: block;
+		padding: 10px 0 10px 20px;
+		font-size: 20pt;
+	}
+
+	.order-panels-cont {
+		padding: 0px 25px;
+		display: block;
+		margin-bottom: 30px;
+	}
+
+	.order-left-panel, .order-right-panel {
+		width: 100%;
+		padding: 0;
+	}
+
+	.customer-order-date, .order-items-title, .order-total-price, .order-address-title {
+		font-size: 18pt;
+		margin-top: 20px;
+		margin-bottom: 0px;
+	}
+
+	.order-items-list {
 		margin-top: 10px;
 	}
+
+	.order-address {
+		line-height: 1.3;
+		margin-left: 25px;
+		margin-top: 10px;
+	}
+
 }

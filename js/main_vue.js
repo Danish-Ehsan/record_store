@@ -201,6 +201,7 @@ var vm = new Vue({
 			});
 		},
 		loadCustomerLogin: function() {
+			resetFormErrors();
 			this.appSettings.showRightLogo = false;
 			this.appSettings.showLeftLogo = false;
 			this.appSettings.showInfo = false;

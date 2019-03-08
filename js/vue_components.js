@@ -9,6 +9,7 @@ Vue.component('left-album-covers', {
 });
 
 Vue.component('left-user-menu', {
+	props: ['customer'],
 	methods: {
 		loadUserCart: function() {
 			vm.appSettings.customerAccountPage = 'cart';
@@ -21,12 +22,33 @@ Vue.component('left-user-menu', {
 			history.pushState({ appSettings: this.appSettings }, '');
 		},
 		loadEditUser: function() {
+			resetFormErrors();
 			vm.appSettings.customerAccountPage = 'editCustomer';
 			vm.appSettings.pageTitle = 'edit account';
 			vm.success.success = false;
 			history.pushState({ appSettings: this.appSettings }, '');
 		},
+		loadCustomerLogin: function() {
+			resetFormErrors();
+			vm.appSettings.showRightLogo = false;
+			vm.appSettings.showLeftLogo = false;
+			vm.appSettings.showInfo = false;
+			vm.appSettings.showNav = false;
+
+			vm.appSettings.pageTitle = 'User Login';
+			vm.appSettings.leftPanelView = 'none';
+			vm.appSettings.rightPanelView = 'customerLogin';
+
+			vm.errorsExist = false;
+			vm.appSettings.loginForm = 'customerLogin';
+			vm.errors.formErrors.password = false;
+			vm.errors.formErrors.email = false;
+			vm.errors.formErrors.firstName = false;
+			vm.errors.formErrors.lastName = false;
+			history.pushState({ appSettings: this.appSettings }, '');
+		},
 		logout: function() {
+			resetFormErrors();
 			vm.customer.details = {};
 			vm.customer.loggedIn = false;
 			vm.appSettings.showRightLogo = false;
@@ -36,6 +58,7 @@ Vue.component('left-user-menu', {
 			vm.appSettings.pageTitle = 'User Login';
 			vm.appSettings.leftPanelView = 'none';
 			vm.appSettings.rightPanelView = 'customerLogin';
+			vm.appSettings.loginForm = 'customerLogin';
 		}
 	}
 });
@@ -186,6 +209,7 @@ Vue.component('right-customer-login', {
 	props: ['appSettings', 'customer', 'errors'],
 	methods: {
 		submitLogin: function() {
+			resetFormErrors();
 			var email = $('#login-email').val();
 			var password = $('#login-password').val();
 			console.log('email: ' + email);
@@ -237,28 +261,18 @@ Vue.component('right-customer-login', {
 			});
 		},
 		showRegisterForm: function() {
+			resetFormErrors();
 			vm.appSettings.loginForm = 'createCustomer';
 			vm.appSettings.pageTitle = 'Register User';
 			history.pushState({ appSettings: vm.appSettings }, '');
 		},
 		createCustomer: function() {
+			resetFormErrors();
 			var firstName = $('#first-name').val();
 			var lastName = $('#last-name').val();
 			var email = $('#create-login-email').val();
 			var password = $('#create-login-password').val();
 			var confirmPassword = $('#create-confirm-password').val();
-
-			//reset all errors
-			vm.errors.formErrors.password = false;
-			vm.errors.formErrors.passwordMessage = '';
-			vm.errors.formErrors.passwordTwo = false;
-			vm.errors.formErrors.passwordTwoMessage = '';
-			vm.errors.formErrors.email = false;
-			vm.errors.formErrors.emailMessage = '';
-			vm.errors.formErrors.firstName = false;
-			vm.errors.formErrors.firstNameMessage = '';
-			vm.errors.formErrors.lastName = false;
-			vm.errors.formErrors.lastNameMessage = '';
 
 			console.log('firstName: ' + firstName);
 
@@ -444,11 +458,32 @@ Vue.component('right-customer-account', {
 			vm.customer.cart.splice(index, 1);
 		},
 		checkout: function() {
-			vm.appSettings.pageTitle = 'checkout';
-			vm.appSettings.customerAccountPage = 'checkout';
-			history.pushState({ appSettings: this.appSettings }, '');
+			resetFormErrors();
+			if (vm.customer.loggedIn) {
+				vm.appSettings.pageTitle = 'checkout';
+				vm.appSettings.customerAccountPage = 'checkout';
+				history.pushState({ appSettings: this.appSettings }, '');
+			} else {
+				this.appSettings.showRightLogo = false;
+				this.appSettings.showLeftLogo = false;
+				this.appSettings.showInfo = false;
+				this.appSettings.showNav = false;
+
+				this.appSettings.pageTitle = 'User Login';
+				this.appSettings.leftPanelView = 'none';
+				this.appSettings.rightPanelView = 'customerLogin';
+
+				this.errorsExist = false;
+				this.appSettings.loginForm = 'customerLogin';
+				this.errors.formErrors.password = false;
+				this.errors.formErrors.email = false;
+				this.errors.formErrors.firstName = false;
+				this.errors.formErrors.lastName = false;
+				history.pushState({ appSettings: this.appSettings }, '');
+			}
 		},
 		placeOrder: function() {
+			resetFormErrors();
 			var firstName = $('#checkout-first-name').val();
 			var lastName = $('#checkout-last-name').val();
 			var country = $('#checkout-country').val();
@@ -460,22 +495,6 @@ Vue.component('right-customer-account', {
 			var cardType = $('#payment-method').val();
 			var cart = JSON.stringify(vm.customer.cart);
 			var totalPrice = this.totalPrice;
-
-			//reset all errors
-			vm.customer.errors.forms.firstName = false;
-			vm.customer.errors.forms.firstNameMessage = '';
-			vm.customer.errors.forms.lastName = false;
-			vm.customer.errors.forms.lastNameMessage = '';
-			vm.customer.errors.forms.country = false;
-			vm.customer.errors.forms.countryMessage = '';
-			vm.customer.errors.forms.city = false;
-			vm.customer.errors.forms.cityMessage = '';
-			vm.customer.errors.forms.postalCode = false;
-			vm.customer.errors.forms.postalCodeMessage = '';
-			vm.customer.errors.forms.addressOne = false;
-			vm.customer.errors.forms.addressOneMessage = '';
-			vm.customer.errors.forms.addressTwo = false;
-			vm.customer.errors.forms.addressTwoMessage = '';
 
 			//validation checks
 			var firstNameValid = validate('name', firstName, null, 60, 1, true);
@@ -583,6 +602,7 @@ Vue.component('right-customer-account', {
 			});
 		},
 		editCustomer: function() {
+			resetFormErrors();
 			console.log('editCustomer test');
 			var customerID = vm.customer.details.customerID;
 			var firstName = $('#edit-first-name').val();
@@ -601,26 +621,6 @@ Vue.component('right-customer-account', {
 			var postalCode = $('#edit-postal-code').val();
 			var addressOne = $('#edit-address-one').val();
 			var addressTwo = $('#edit-address-two').val();
-
-			vm.errors.formErrors.firstName = false;
-			vm.errors.formErrors.firstNameMessage = '';
-			vm.errors.formErrors.lastName = false;
-			vm.errors.formErrors.lastNameMessage = '';
-			vm.errors.formErrors.emailMessage = '';
-			vm.errors.formErrors.password = false;
-			vm.errors.formErrors.passwordMessage = '';
-			vm.errors.formErrors.passwordTwo = false;
-			vm.errors.formErrors.passwordTwoMessage = '';			
-			vm.errors.formErrors.country = false;
-			vm.errors.formErrors.countryMessage = '';
-			vm.errors.formErrors.city = false;
-			vm.errors.formErrors.cityMessage = '';
-			vm.errors.formErrors.postalCode = false;
-			vm.errors.formErrors.postalCodeMessage = '';
-			vm.errors.formErrors.addressOne = false;
-			vm.errors.formErrors.addressOneMessage = '';
-			vm.errors.formErrors.addressTwo = false;
-			vm.errors.formErrors.addressTwoMessage = '';
 
 			vm.success.success = false;
 			vm.success.successMessage = '';
@@ -799,10 +799,18 @@ Vue.component('right-customer-account', {
 
 		},
 		loadEditUser: function() {
+			resetFormErrors();
 			vm.appSettings.customerAccountPage = 'editCustomer';
 			vm.appSettings.pageTitle = 'edit account';
 			history.pushState({ appSettings: this.appSettings }, '');
 		},
+		mobileSizeCheck: function() {
+			if ($(window).width() <= 500 ) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	},
 	computed: {
 		totalPrice: function() {

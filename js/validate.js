@@ -12,11 +12,8 @@ function validate( type, value, valueTwo, maxLength, minLength, required ) {
 
 	var result;
 	if (type == 'name') {
-		result = /\d/.test(value);
-		if (result) return 'This field cannot include numbers.';
-
-		result = /\n/.test(value);
-		if (result) return 'This field cannot contain new line characters.';
+		result = /[a-z]/.test(value);
+		if (!result) return 'This field can only include letters.';
 	}
 
 	if (type == 'email') {

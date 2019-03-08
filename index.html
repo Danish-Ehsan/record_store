@@ -87,14 +87,16 @@
 				</left-album-covers>
 				<left-user-menu
 					v-if="appSettings.leftPanelView == 'userMenu'"
+					v-bind:customer="customer"
 				inline-template>
 					<transition name="slide-left-delay">
 						<div id="user-menu-cont">
 							<ul id="user-menu">
 								<li><a href="#" v-on:click.prevent="loadUserCart">My Cart</a></li>
-								<li><a href="#" v-on:click.prevent="loadUserOrders">My Orders</a></li>
-								<li><a href="#" v-on:click.prevent="loadEditUser">Edit account</a></li>
-								<li><a href="#" v-on:click.prevent="logout">Logout</a></li>
+								<li v-if="customer.loggedIn"><a href="#" v-on:click.prevent="loadUserOrders">My Orders</a></li>
+								<li v-if="customer.loggedIn"><a href="#" v-on:click.prevent="loadEditUser">Edit account</a></li>
+								<li v-if="customer.loggedIn"><a href="#" v-on:click.prevent="logout">Logout</a></li>
+								<li v-if="!customer.loggedIn"><a href="#" v-on:click.prevent="loadCustomerLogin">Login</a></li>
 							</ul>
 						</div>
 					</transition>
@@ -225,11 +227,11 @@
 							                	v-if="customer.incorrectLogin" 
 							                	class="login-error-cont"
 							                >
-								                <label v-if="!mobileSizeCheck()">&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">Incorrect email/password combination.</span><br>
 							                </div>
 
-							                <label v-if="!mobileSizeCheck()">&nbsp;</label>
+							                <label class="empty-label">&nbsp;</label>
 							                <input type="submit" value="Login" class="submit-button submit-button-login">
 
 							                
@@ -242,8 +244,8 @@
 								</div>
 								<div 
 									v-else-if="appSettings.loginForm == 'createCustomer'"
-									id="right-customer-create"
-									key="right-customer-create"
+									id="customer-create-cont"
+									key="customer-create-cont"
 								>
 									<transition appear name="slide-up-title">
 										<div class="page-title">{{ appSettings.pageTitle }}</div>
@@ -259,7 +261,7 @@
 							                	v-if="errors.formErrors.firstName" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
 							                </div>
 
@@ -270,7 +272,7 @@
 							                	v-if="errors.formErrors.lastName" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
 							                </div>
 
@@ -281,7 +283,7 @@
 							                	v-if="errors.formErrors.email" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
 							                </div>
 							                
@@ -292,7 +294,7 @@
 							                	v-if="errors.formErrors.password" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
 							                </div>
 
@@ -303,11 +305,11 @@
 							                	v-if="errors.formErrors.passwordTwo" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
 							                </div>
 
-							                <label>&nbsp;</label>
+							                <label class="empty-label">&nbsp;</label>
 							                <input type="submit" value="Register User" class="submit-button submit-button-login">
 							            </form>
 							        </div><!--#customer-create-form-->
@@ -403,7 +405,7 @@
 							                	v-if="errors.formErrors.firstName" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.firstNameMessage }}</span><br>
 							                </div>
 
@@ -414,7 +416,7 @@
 							                	v-if="errors.formErrors.lastName" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.lastNameMessage }}</span><br>
 							                </div>
 
@@ -425,7 +427,7 @@
 							                	v-if="errors.formErrors.email" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.emailMessage }}</span><br>
 							                </div>
 							                
@@ -436,7 +438,7 @@
 							                	v-if="errors.formErrors.password" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.passwordMessage }}</span><br>
 							                </div>
 
@@ -447,18 +449,18 @@
 							                	v-if="errors.formErrors.passwordTwo" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.passwordTwoMessage }}</span><br>
 							                </div>
 
-						                	<label>&nbsp;</label><br>
+						                	<label class="empty-label">&nbsp;</label><br>
 							                <label>Country:</label>
 							                <input type="text" name="country" id="edit-country" v-bind:value="customer.details.address.country"><br>
 							                <div 
 							                	v-if="errors.formErrors.country" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.countryMessage }}</span><br>
 							                </div>
 							                <label>City:</label>
@@ -467,7 +469,7 @@
 							                	v-if="errors.formErrors.city" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.cityMessage }}</span><br>
 							                </div>
 							                <label>Postal/Zip Code:</label>
@@ -476,7 +478,7 @@
 							                	v-if="errors.formErrors.postalCode" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.postalCodeMessage }}</span><br>
 							                </div>
 							                <label>Address Line 1:</label>
@@ -485,7 +487,7 @@
 							                	v-if="errors.formErrors.addressOne" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.addressOneMessage }}</span><br>
 							                </div>
 							                <label>Address Line 2:</label>
@@ -494,17 +496,17 @@
 							                	v-if="errors.formErrors.addressTwo" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ errors.formErrors.addressTwoMessage }}</span><br>
 							                </div>
 
-							                <label>&nbsp;</label>
+							                <label class="empty-label">&nbsp;</label>
 							                <input type="submit" value="Save Changes" class="submit-button submit-button-login">
 							                <div 
 							                	v-if="success.success"
 							                	class="form-success-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="form-success">{{ success.successMessage }}</span><br>
 							                </div>
 							            </form>
@@ -534,7 +536,7 @@
 							                	v-if="customer.errors.forms.firstName" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.firstNameMessage }}</span><br>
 							                </div>
 							                <label>Last Name:</label>
@@ -543,17 +545,17 @@
 							                	v-if="customer.errors.forms.lastName" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.lastNameMessage }}</span><br>
 							                </div>
-							                <label>&nbsp;</label><br>
+							                <label class="empty-label">&nbsp;</label><br>
 							                <label>Country:</label>
 							                <input type="text" v-bind:value="customer.details.address.country" name="country" id="checkout-country" v-bind:disabled="customer.details.address.line1.length > 0"><br>
 							                <div 
 							                	v-if="customer.errors.forms.country" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.countryMessage }}</span><br>
 							                </div>
 							                <label>City:</label>
@@ -562,7 +564,7 @@
 							                	v-if="customer.errors.forms.city" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.cityMessage }}</span><br>
 							                </div>
 							                <label>Postal/Zip Code:</label>
@@ -571,7 +573,7 @@
 							                	v-if="customer.errors.forms.postalCode" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.postalCodeMessage }}</span><br>
 							                </div>
 							                <label>Address Line 1:</label>
@@ -580,7 +582,7 @@
 							                	v-if="customer.errors.forms.addressOne" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.addressOneMessage }}</span><br>
 							                </div>
 							                <label>Address Line 2:</label>
@@ -589,7 +591,7 @@
 							                	v-if="customer.errors.forms.addressTwo" 
 							                	class="login-error-cont"
 							                >
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">{{ customer.errors.forms.addressTwoMessage }}</span><br>
 							                </div>
 							                <div v-if="!customer.details.address.line1.length">
@@ -600,10 +602,10 @@
 	               								</label><br>
 	               							</div>
 	               							<div v-else>
-	               								<label>&nbsp;</label>
+	               								<label class="empty-label">&nbsp;</label>
 	               								<button class="edit-customer-button checkout-form" v-on:click.prevent="loadEditUser">Edit address info</button><br>
 	               							</div>
-						                	<label>&nbsp;</label><br>
+						                	<label class="empty-label">&nbsp;</label><br>
 						                	<label>Payment method:</label>
                 							<select name="paymentMethod" id="payment-method">
                 								<option value="visa">Visa</option>
@@ -615,10 +617,10 @@
 							                <label>CCV:</label>
 							                <input type="text" name="ccv" id="checkout-card-number" disabled><br>
 							                <div class="login-error-cont">
-								                <label>&nbsp;</label>
+								                <label class="empty-label">&nbsp;</label>
 								                <span class="login-error">Credit card info disabled in this demo. Leave fields empty.</span><br>
 							                </div>
-                							<label>&nbsp;</label>
+                							<label class="empty-label">&nbsp;</label>
 						                	<input type="submit" value="Place order" class="submit-button checkout-form"><br>
 							            </form>
 									</div>
@@ -645,9 +647,11 @@
 												<div class="order-right-panel">
 													<div class="customer-order-shipping">
 														<div class="order-address-title">Address:</div>
-														{{ customer.orders[customer.orders.length-1].address.city }}, {{ customer.orders[customer.orders.length-1].address.country }}<br>
-														{{ customer.orders[customer.orders.length-1].address.postalCode }}<br>
-														{{ customer.orders[customer.orders.length-1].address.line1 }}<br>
+														<div class="order-address">
+															{{ customer.orders[customer.orders.length-1].address.city }}, {{ customer.orders[customer.orders.length-1].address.country }}<br>
+															{{ customer.orders[customer.orders.length-1].address.postalCode }}<br>
+															{{ customer.orders[customer.orders.length-1].address.line1 }}<br>
+														</div>
 														<span v-if="customer.orders[customer.orders.length-1].address.line2.length > 0">{{ customer.orders[customer.orders.length-1].address.line2 }}</span>
 													</div>
 												</div>
@@ -682,10 +686,12 @@
 												<div class="order-right-panel">
 													<div class="customer-order-shipping">
 														<div class="order-address-title">Address:</div>
-														{{ order.address.city }}, {{ order.address.country }}<br>
-														{{ order.address.postalCode }}<br>
-														{{ order.address.line1 }}<br>
-														<span v-if="order.address.line2.length > 0">{{ order.address.line2 }}</span>
+														<div class="order-address">
+															{{ order.address.city }}, {{ order.address.country }}<br>
+															{{ order.address.postalCode }}<br>
+															{{ order.address.line1 }}<br>
+															<span v-if="order.address.line2.length > 0">{{ order.address.line2 }}</span>
+														</div>
 													</div>
 												</div>
 											</div>
