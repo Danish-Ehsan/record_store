@@ -10,12 +10,12 @@ $action = filter_input(INPUT_GET, 'action');
 if ($action == null) {
     $action = filter_input(INPUT_POST, 'action');
     if ($action == null) {
-        $action = 'featured';
+        $action = 'getFeatured';
     }
 }
 
 switch ($action) {
-    case 'featured':
+    case 'getFeatured':
         $albums = getFeatured();
         formatAlbums($albums);
         
@@ -42,6 +42,15 @@ switch ($action) {
     case 'getAlbum':
         $albumID = filter_input(INPUT_GET, 'albumID', FILTER_VALIDATE_INT);
         $album = getAlbumByID($albumID);
+        $album['artistName'] = getArtistByID($album['artistID'])['artistName'];
+        formatAlbums($album);
+        $album = json_encode($album);
+        echo $album;
+        break;
+    case 'getRandom':
+        $albumsCount = allAlbumsCount();
+        $randomID = rand(1, $albumsCount);
+        $album = getAlbumByID($randomID);
         $album['artistName'] = getArtistByID($album['artistID'])['artistName'];
         formatAlbums($album);
         $album = json_encode($album);
@@ -227,6 +236,17 @@ switch ($action) {
         
         $result = json_encode($result);
         
+        echo $result;
+        break;
+    case 'search':
+        $searchVal = filter_input(INPUT_POST, 'searchVal');
+        $result = array();
+        
+        $result['albums'] = searchAlbums($searchVal);
+        $result['artists'] = searchArtists($searchVal);
+        $result['songs'] = searchSongs($searchVal);
+        
+        $result = json_encode($result);
         echo $result;
         break;
     default:

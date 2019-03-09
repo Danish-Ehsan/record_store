@@ -4,6 +4,11 @@ var vm = new Vue({
 		albums: [],
 		artists: [],
 		errorsExist: false,
+		searchResults: {
+			albums: [],
+			artists: [],
+			songs: []
+		},
 		customer: {
 			/*details: {
 				address: {
@@ -158,13 +163,13 @@ var vm = new Vue({
 		},
 		loadHome: function() {
 			$.ajax({
-				url: 'data',
+				url: 'data?action=getFeatured',
 				type: 'GET',
 				success: (result) => {
 					try {
 						console.log('loadhome test');
-						var myObj = JSON.parse(result);
-			    		vm.albums = myObj;
+						var result = JSON.parse(result);
+			    		vm.albums = result;
 			    		this.appSettings.currentAlbum = 0;
 						this.appSettings.showRightLogo = true;
 						this.appSettings.showLeftLogo = true;
@@ -195,6 +200,90 @@ var vm = new Vue({
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
 					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
+				}
+			});
+		},
+		loadAlbum: function(albumID) {
+			console.log('albumID: ' + albumID);
+			$.ajax({
+				url: 'data?action=getAlbum&albumID=' + albumID,
+				type: 'GET',
+				success: (result) => {
+					try {
+						console.log(result);
+						result = JSON.parse(result);
+						vm.albums = [result];
+
+						this.appSettings.showRightLogo = false;
+						this.appSettings.showLeftLogo = false;
+						this.appSettings.showInfo = true;
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'albumCovers';
+						this.appSettings.rightPanelView = 'albums';
+						//vm.appSettings.showAlbums = true;
+						//vm.appSettings.showArtistsList = false;
+						//vm.appSettings.showAlbumsList = false;
+						this.appSettings.pageTitle = '';
+						//global interval variable
+						albumInfoInterval =  setInterval(albumInfoScroll, 200);
+						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
+					} catch (error) {
+						this.errors.errorCode = error.name;
+						this.appSettings.pageTitle = 'error';
+						this.appSettings.leftPanelView = 'none';
+						this.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
+				},
+				error: (error) => {
+					this.errors.errorCode = error.name;
+					this.appSettings.pageTitle = 'error';
+					this.appSettings.leftPanelView = 'none';
+					this.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
+				}
+			});
+		},
+		loadArtistCatalog: function(artistID) {
+			console.log(artistID);
+			$.ajax({
+				url: 'data?action=getArtistCatalog&artistID=' + artistID,
+				type: 'GET',
+				success: (result) => {
+					try {
+						result = JSON.parse(result);
+						this.albums = result;
+
+						this.appSettings.showRightLogo = false;
+						this.appSettings.showLeftLogo = false; //causing errors with album info scroll functions
+						this.appSettings.showInfo = false;
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'albumCovers';
+						this.appSettings.rightPanelView = 'albums';
+						//vm.appSettings.showAlbums = true;
+						//vm.appSettings.showArtistsList = false;
+						this.appSettings.pageTitle = result[0].artistName;
+						//global interval variable
+						albumInfoInterval =  setInterval(albumInfoScroll, 200);
+						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
+					} catch (error) {
+						this.errors.errorCode = error.name;
+						this.appSettings.pageTitle = 'error';
+						this.appSettings.leftPanelView = 'none';
+						this.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
+				},
+				error: (error) => {
+					this.errors.errorCode = error.name;
+					this.appSettings.pageTitle = 'error';
+					this.appSettings.leftPanelView = 'none';
+					this.appSettings.rightPanelView = 'errors';
 					console.log(error.message);
 					return;
 				}
@@ -249,6 +338,96 @@ var vm = new Vue({
 			vm.appSettings.customerAccountPage = 'cart';
 			vm.appSettings.pageTitle = 'my cart';
 			history.pushState({ appSettings: this.appSettings }, '');
+		},
+		loadRandomAlbum: function() {
+			$.ajax({
+				url: 'data?action=getRandom',
+				type: 'GET',
+				success: (result) => {
+					try {
+						var result = JSON.parse(result);
+			    		vm.albums = [result];
+			    		this.appSettings.currentAlbum = 0;
+						this.appSettings.showRightLogo = false;
+						this.appSettings.showLeftLogo = false;
+						this.appSettings.showInfo = false;
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'albumCovers';
+						this.appSettings.rightPanelView = 'albums';
+						this.appSettings.pageTitle = 'random album';
+						history.pushState({ appSettings: this.appSettings, albums: this.albums, artists: this.artists }, '');
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
+				},
+				error: (error) => {
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
+				}
+			});
+		},
+		submitSearch: function() {
+			var searchVal = $('#nav-search').val();
+
+			//if search input is empty load search page and exit
+			if (!searchVal.length) {
+				this.searchResults = { albums: [], artists: [], songs: [] };
+				this.appSettings.showNav = false;
+				this.appSettings.leftPanelView = 'none';
+				this.appSettings.rightPanelView = 'searchList';
+				this.appSettings.pageTitle = 'Search result';
+				history.pushState({ appSettings: this.appSettings, albums: this.albums }, '');
+				return;
+			}
+
+			$.ajax({
+				url: 'data/index.php',
+				type: 'POST',
+				data: {
+					action: 'search',
+					searchVal: searchVal
+				},
+				success: (result) => {
+					try {
+						console.log(result);
+						var result = JSON.parse(result);
+
+						this.searchResults = result;
+						clearInterval(albumInfoInterval);
+
+						// this.appSettings.showLeftLogo = false;
+						this.appSettings.showNav = false;
+						this.appSettings.leftPanelView = 'none';
+						this.appSettings.rightPanelView = 'searchList';
+						this.appSettings.pageTitle = 'Search result';
+						history.pushState({ appSettings: this.appSettings, albums: this.albums }, '');
+					} catch (error) {
+						vm.errors.errorCode = error.name;
+						vm.appSettings.pageTitle = 'error';
+						vm.appSettings.leftPanelView = 'none';
+						vm.appSettings.rightPanelView = 'errors';
+						console.log(error.message);
+						return;
+					}
+				},
+				error: (error) => {
+					vm.errors.errorCode = error.name;
+					vm.appSettings.pageTitle = 'error';
+					vm.appSettings.leftPanelView = 'none';
+					vm.appSettings.rightPanelView = 'errors';
+					console.log(error.message);
+					return;
+				}
+			});
 		},
 		mobileSizeCheck: function() {
 			if ($(window).width() <= 500 ) {

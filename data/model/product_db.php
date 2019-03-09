@@ -383,6 +383,23 @@ function artistAlbumCount($artistID) {
     }
 }
 
+function allAlbumsCount() {
+    global $db;
+    $query ='SELECT COUNT(albumID) AS albumCount
+             FROM albums';
+    try {
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $result = $statement->fetch();
+        $statement->closeCursor();
+        return $result[0];
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        echo $error_message;
+        exit();
+    }
+}
+
 function deleteArtist($artistID) {
     global $db;
     $query = 'DELETE FROM artists
@@ -400,6 +417,63 @@ function deleteArtist($artistID) {
             include ('admin/view/footer.php');
             exit();
         }
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        echo $error_message;
+        exit();
+    }
+}
+
+function searchAlbums($searchVal) {
+    global $db;
+    $query = 'SELECT *
+              FROM albums
+              WHERE albumName LIKE :searchVal';
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(":searchVal", '%'.$searchVal.'%');
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        echo $error_message;
+        exit();
+    }
+}
+
+function searchArtists($searchVal) {
+    global $db;
+    $query = 'SELECT *
+              FROM artists
+              WHERE artistName LIKE :searchVal';
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(":searchVal", '%'.$searchVal.'%');
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
+        return $result;
+    } catch (PDOException $e) {
+        $error_message = $e->getMessage();
+        echo $error_message;
+        exit();
+    }
+}
+
+function searchSongs($searchVal) {
+    global $db;
+    $query = 'SELECT *
+              FROM songs
+              WHERE songName LIKE :searchVal';
+    try {
+        $statement = $db->prepare($query);
+        $statement->bindValue(":searchVal", '%'.$searchVal.'%');
+        $statement->execute();
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $statement->closeCursor();
+        return $result;
     } catch (PDOException $e) {
         $error_message = $e->getMessage();
         echo $error_message;

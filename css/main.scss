@@ -94,7 +94,7 @@ NAVIGATION
 	background-color: $dark-gold;
 	transition: width 0.5s;
 	&.active {
-		width: 200px;
+		width: 250px;
 	}
 	ul {
 		display: inline-block;
@@ -108,15 +108,44 @@ NAVIGATION
 		}
 		li {
 			padding: 6px 10px;
-			cursor: pointer;
 			a {
 				color: $primary-red;
+				cursor: pointer;
 				&:hover {
 					color: white;
 				}
 			}
+			form {
+				width: 140px;
+			}
 		}
 	}
+}
+
+#nav-search {
+	width: 100px;
+	margin-left: -8px;
+	vertical-align: middle;
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
+	padding-left: 10px;
+	box-sizing: border-box;
+	&::placeholder {
+		color: rgba(255, 255, 255, 0.6);
+	}
+}
+
+#search-submit-btn {
+	width: 30px;
+	margin-left: 0;
+	background-color: $primary-red;
+	background-image: url(../images/rstore_icon_search.png);
+	background-size: 45%;
+	background-repeat: no-repeat;
+	background-position: 40% 50%;
+	vertical-align: middle;
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
 }
 
 
@@ -240,7 +269,20 @@ LEFT PANEL
 	img {
 		width: 100%;
 	}
+	&.single-album {
+		margin: 0 auto;
+		position: absolute;
+		height: 100%;
+		left: 0;
+		right: 0;
+		img {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+	}
 }
+
 
 #user-menu-cont {
 	width: 50%;
@@ -260,9 +302,9 @@ LEFT PANEL
 	li {
 		padding: 2px 0;
 		a {
-			color: $primary-gold;
+			color: #ffffff;
 			&:hover {
-				color: white;
+				color: $primary-gold;
 			}
 		}
 	}
@@ -432,11 +474,11 @@ ARTISTS/ALBUMS LIST PAGE
 	letter-spacing: 1px;
 }
 
-#right-artists-list, #right-albums-list {
+#right-artists-list, #right-albums-list, #right-search-list {
 	@extend %right-panel-content;
 }
 
-#artist-lists, #albums-lists {
+#artist-lists, #albums-lists, #search-lists-cont {
 	position: relative;
 	display: block;
 	width: 70%;
@@ -465,7 +507,15 @@ ARTISTS/ALBUMS LIST PAGE
 	}
 }
 
+#search-lists-cont {
+	h2 {
+		color: #ffffff;
+	}
+}
 
+#search-artists-list, #search-albums-list, #search-songs-list {
+	margin-bottom: 30px;
+}
 
 /*-----------------------
 USER PAGES
@@ -907,17 +957,14 @@ VUE ANIMATION
 
 
 .slide-left-delay-leave-active {
-	position: relative;
 	transition: all 0.2s;
 }
 
 .slide-left-delay-enter-active {
-	position: relative;
 	transition: all 0.2s linear 0.5s;
 }
 
 .slide-left-delay-enter, .slide-left-delay-leave-to {
-	position: relative;
 	opacity: 0;
 }
 

@@ -104,48 +104,7 @@ Vue.component('right-artists-list', {
 		}
 	},
 	methods: {
-		loadArtistCatalog: function(artistID) {
-			console.log(artistID);
-			$.ajax({
-				url: 'data?action=getArtistCatalog&artistID=' + artistID,
-				type: 'GET',
-				success: (result) => {
-					try {
-						result = JSON.parse(result);
-						console.log(result);
-						vm.albums = result;
-
-						vm.appSettings.showRightLogo = false;
-						vm.appSettings.showLeftLogo = false; //causing errors with album info scroll functions
-						vm.appSettings.showInfo = false;
-						vm.appSettings.showNav = false;
-						vm.appSettings.leftPanelView = 'albumCovers';
-						vm.appSettings.rightPanelView = 'albums';
-						//vm.appSettings.showAlbums = true;
-						//vm.appSettings.showArtistsList = false;
-						vm.appSettings.pageTitle = result[0].artistName;
-						//global interval variable
-						albumInfoInterval =  setInterval(albumInfoScroll, 200);
-						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
-					} catch (error) {
-						vm.errors.errorCode = error.name;
-						vm.appSettings.pageTitle = 'error';
-						vm.appSettings.leftPanelView = 'none';
-						vm.appSettings.rightPanelView = 'errors';
-						console.log(error.message);
-						return;
-					}
-				},
-				error: (error) => {
-					vm.errors.errorCode = error.name;
-					vm.appSettings.pageTitle = 'error';
-					vm.appSettings.leftPanelView = 'none';
-					vm.appSettings.rightPanelView = 'errors';
-					console.log(error.message);
-					return;
-				}
-			});
-		}
+		
 	}
 });
 
@@ -160,48 +119,7 @@ Vue.component('right-albums-list', {
 		}
 	},
 	methods: {
-		loadAlbum: function(albumID) {
-			$.ajax({
-				url: 'data?action=getAlbum&albumID=' + albumID,
-				type: 'GET',
-				success: (result) => {
-					try {
-						console.log(result);
-						result = JSON.parse(result);
-						vm.albums = [result];
 
-						vm.appSettings.showRightLogo = false;
-						vm.appSettings.showLeftLogo = false;
-						vm.appSettings.showInfo = true;
-						vm.appSettings.showNav = false;
-						vm.appSettings.leftPanelView = 'albumCovers';
-						vm.appSettings.rightPanelView = 'albums';
-						//vm.appSettings.showAlbums = true;
-						//vm.appSettings.showArtistsList = false;
-						//vm.appSettings.showAlbumsList = false;
-						vm.appSettings.pageTitle = '';
-						//global interval variable
-						albumInfoInterval =  setInterval(albumInfoScroll, 200);
-						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
-					} catch (error) {
-						vm.errors.errorCode = error.name;
-						vm.appSettings.pageTitle = 'error';
-						vm.appSettings.leftPanelView = 'none';
-						vm.appSettings.rightPanelView = 'errors';
-						console.log(error.message);
-						return;
-					}
-				},
-				error: (error) => {
-					vm.errors.errorCode = error.name;
-					vm.appSettings.pageTitle = 'error';
-					vm.appSettings.leftPanelView = 'none';
-					vm.appSettings.rightPanelView = 'errors';
-					console.log(error.message);
-					return;
-				}
-			});
-		}
 	}
 });
 
@@ -832,3 +750,11 @@ Vue.component('right-errors', {
 	methods: {
 	}
 });
+
+Vue.component('right-search-list', {
+	props: ['searchResults', 'pageTitle'],
+	methods: {
+
+	}
+});
+

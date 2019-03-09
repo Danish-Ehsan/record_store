@@ -1,7 +1,7 @@
 $(function() {
 	try { 
 		$.ajax({
-			url: 'data',
+			url: 'data?action=getFeatured',
 			type: 'GET',
 			success: function(result) {
 

@@ -26,7 +26,12 @@
 						<li><a href="#" v-on:click.prevent="loadAllAlbums">Ablums</a></li>
 						<li><a href="#" v-on:click.prevent="loadArtists">Artists</a></li>
 						<li><a href="#" v-on:click.prevent="loadCustomerLogin">User</a></li>
-						<li><a href="#">Random</a></li>
+						<li><a href="#" v-on:click.prevent="loadRandomAlbum">Random</a></li>
+						<li>
+							<form v-on:submit.prevent="submitSearch">
+								<input type="text" name="search" id="nav-search" placeholder="Search"><input type="submit" id="search-submit-btn" value="">
+							</form>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -79,7 +84,11 @@
 							<div v-if="appSettings.showLeftLogo" id="logo">
 								<img src="images/rstore_logo.png">
 							</div>
-							<div v-for='album in albums' class="album-image-cont" v-on:click="toggleInfo">
+							<div 
+								v-for="album in albums" 
+								v-bind:class="[ 'album-image-cont', (albums.length == 1) ? 'single-album' : '' ]" 
+								v-on:click="toggleInfo"
+							>
 								<img class="album-image" v-bind:src="album.image">
 							</div>
 						</div>
@@ -142,6 +151,7 @@
 						v-if="appSettings.rightPanelView == 'artistsList'"
 						v-bind:artists="artists"
 						v-bind:page-title="appSettings.pageTitle"
+						v-on:load-artist="loadArtistCatalog"
 					inline-template>
 							<div id="right-artists-list">
 								<transition appear name="slide-up-title">
@@ -153,13 +163,13 @@
 									<ul id="artists-first-colmn">
 										<li 
 											v-for="artist in artistsFirstColmn"
-											v-on:click="loadArtistCatalog( artist.artistID )"
+											v-on:click="$emit('load-artist',  artist.artistID)"
 										>{{ artist.artistName }}</li>
 									</ul>
 									<ul id="artists-second-colmn">
 										<li 
 											v-for="artist in artistsSecondColmn"
-											v-on:click="loadArtistCatalog( artist.artistID )"
+											v-on:click="$emit('load-artist',  artist.artistID)"
 										>{{ artist.artistName }}</li>
 									</ul>
 								</div>
@@ -170,6 +180,7 @@
 						v-if="appSettings.rightPanelView == 'albumsList'"
 						v-bind:albums="albums"
 						v-bind:page-title="appSettings.pageTitle"
+						v-on:load-album="loadAlbum"
 					inline-template>
 							<div id="right-albums-list">
 								<transition appear name="slide-up-title">
@@ -181,18 +192,58 @@
 									<ul id="albums-first-colmn">
 										<li 
 											v-for="album in albumsFirstColmn"
-											v-on:click="loadAlbum( album.albumID )"
+											v-on:click="$emit('load-album',  album.albumID)"
 										>{{ album.albumName }}</li>
 									</ul>
 									<ul id="albums-second-colmn">
 										<li 
 											v-for="album in albumsSecondColmn"
-											v-on:click="loadAlbum( album.albumID )"
+											v-on:click="$emit('load-album',  album.albumID)"
 										>{{ album.albumName }}</li>
 									</ul>
 								</div>
 							</div>
 					</right-albums-list>
+
+					<right-search-list
+						v-if="appSettings.rightPanelView == 'searchList'"
+						v-bind:search-results="searchResults"
+						v-bind:page-title="appSettings.pageTitle"
+						v-on:load-album="loadAlbum"
+						v-on:load-artist="loadArtistCatalog"
+					inline-template>
+							<div id="right-search-list">
+								<transition appear name="slide-up-title">
+									<div class="page-title">
+										{{ pageTitle }}
+									</div>
+								</transition>
+								<div id="search-lists-cont">
+									<h2 v-if="searchResults.artists.length">Artists</h2>
+									<ul v-if="searchResults.artists.length" id="search-artists-list">
+										<li 
+											v-for="artist in searchResults.artists"
+											v-on:click="$emit('load-artist',  artist.artistID)"
+										>{{ artist.artistName }}</li>
+									</ul>
+									<h2 v-if="searchResults.albums.length">Albums</h2>
+									<ul v-if="searchResults.albums.length" id="search-albums-list">
+										<li 
+											v-for="album in searchResults.albums"
+											v-on:click="$emit('load-album',  album.albumID)"
+										>{{ album.albumName }}</li>
+									</ul>
+									<h2 v-if="searchResults.songs.length">Songs</h2>
+									<ul v-if="searchResults.songs.length" id="search-songs-list">
+										<li 
+											v-for="song in searchResults.songs"
+											v-on:click="$emit('load-album',  song.albumID)"
+										>{{ song.songName }}</li>
+									</ul>
+									<h2 v-if="!(searchResults.artists.length || searchResults.albums.length || searchResults.songs.length)">No results found.</h2>
+								</div>
+							</div>
+					</right-search-list>
 
 					<right-customer-login
 						v-if="appSettings.rightPanelView == 'customerLogin'"

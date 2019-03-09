@@ -118,7 +118,7 @@ NAVIGATION
   background-color: #f0a900;
   transition: width 0.5s; }
   #nav-menu.active {
-    width: 200px; }
+    width: 250px; }
   #nav-menu ul {
     display: inline-block;
     margin: 0 auto;
@@ -129,12 +129,37 @@ NAVIGATION
     #nav-menu ul :hover {
       color: white; }
     #nav-menu ul li {
-      padding: 6px 10px;
-      cursor: pointer; }
+      padding: 6px 10px; }
       #nav-menu ul li a {
-        color: #942932; }
+        color: #942932;
+        cursor: pointer; }
         #nav-menu ul li a:hover {
           color: white; }
+      #nav-menu ul li form {
+        width: 140px; }
+
+#nav-search {
+  width: 100px;
+  margin-left: -8px;
+  vertical-align: middle;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  padding-left: 10px;
+  box-sizing: border-box; }
+  #nav-search::placeholder {
+    color: rgba(255, 255, 255, 0.6); }
+
+#search-submit-btn {
+  width: 30px;
+  margin-left: 0;
+  background-color: #942932;
+  background-image: url(../images/rstore_icon_search.png);
+  background-size: 45%;
+  background-repeat: no-repeat;
+  background-position: 40% 50%;
+  vertical-align: middle;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px; }
 
 /*-----------------------
 MAIN USER BUTTONS
@@ -234,6 +259,16 @@ LEFT PANEL
     margin-bottom: 30%; }
   .album-image-cont img {
     width: 100%; }
+  .album-image-cont.single-album {
+    margin: 0 auto;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    right: 0; }
+    .album-image-cont.single-album img {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%); }
 
 #user-menu-cont {
   width: 50%;
@@ -252,9 +287,9 @@ LEFT PANEL
   #user-menu li {
     padding: 2px 0; }
     #user-menu li a {
-      color: #f6c115; }
+      color: #ffffff; }
       #user-menu li a:hover {
-        color: white; }
+        color: #f6c115; }
 
 /*-----------------------
 RIGHT PANEL
@@ -382,7 +417,7 @@ RIGHT PANEL
 /*-----------------------
 ARTISTS/ALBUMS LIST PAGE
 ------------------------*/
-#right-artists-list, #right-albums-list, #right-customer-login, #right-customer-account {
+#right-artists-list, #right-albums-list, #right-search-list, #right-customer-login, #right-customer-account {
   width: 100%;
   height: 100%;
   position: relative;
@@ -394,7 +429,7 @@ ARTISTS/ALBUMS LIST PAGE
   font-size: 38pt;
   letter-spacing: 1px; }
 
-#artist-lists, #albums-lists {
+#artist-lists, #albums-lists, #search-lists-cont {
   position: relative;
   display: block;
   width: 70%;
@@ -404,19 +439,25 @@ ARTISTS/ALBUMS LIST PAGE
   margin: 0 auto;
   overflow: scroll;
   white-space: nowrap; }
-  #artist-lists ul, #albums-lists ul {
+  #artist-lists ul, #albums-lists ul, #search-lists-cont ul {
     white-space: normal;
     width: 45%;
     min-width: 300px;
     display: inline-block;
     vertical-align: top; }
-    #artist-lists ul:first-of-type, #albums-lists ul:first-of-type {
+    #artist-lists ul:first-of-type, #albums-lists ul:first-of-type, #search-lists-cont ul:first-of-type {
       margin-right: 10%; }
-    #artist-lists ul li, #albums-lists ul li {
+    #artist-lists ul li, #albums-lists ul li, #search-lists-cont ul li {
       margin: 10px 0;
       cursor: pointer; }
-      #artist-lists ul li:hover, #albums-lists ul li:hover {
+      #artist-lists ul li:hover, #albums-lists ul li:hover, #search-lists-cont ul li:hover {
         color: white; }
+
+#search-lists-cont h2 {
+  color: #ffffff; }
+
+#search-artists-list, #search-albums-list, #search-songs-list {
+  margin-bottom: 30px; }
 
 /*-----------------------
 USER PAGES
@@ -757,15 +798,12 @@ VUE ANIMATION
   opacity: 0; }
 
 .slide-left-delay-leave-active {
-  position: relative;
   transition: all 0.2s; }
 
 .slide-left-delay-enter-active {
-  position: relative;
   transition: all 0.2s linear 0.5s; }
 
 .slide-left-delay-enter, .slide-left-delay-leave-to {
-  position: relative;
   opacity: 0; }
 
 .cart-slide-down-enter-active, .cart-slide-down-leave-active {
