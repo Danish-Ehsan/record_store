@@ -49,6 +49,7 @@ var vm = new Vue({
 			showLeftLogo: true,
 			showInfo: false,
 			showNav: false,
+			loading: false,
 			leftPanelView: 'albumCovers',
 			rightPanelView: 'albums',
 			customerAccountPage: 'checkout',
@@ -93,6 +94,8 @@ var vm = new Vue({
 			this.appSettings.showNav = !this.appSettings.showNav;
 		},
 		loadArtists: function() {
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data?action=getArtists',
 				type: 'GET',
@@ -101,13 +104,14 @@ var vm = new Vue({
 						result = JSON.parse(result);
 						this.artists = result;
 						clearInterval(albumInfoInterval);
+						vm.appSettings.loading = false;
 
-						this.appSettings.showNav = false;
 						this.appSettings.leftPanelView = 'none';
 						this.appSettings.rightPanelView = 'artistsList';
 						this.appSettings.pageTitle = 'Artists';
 						history.pushState({ appSettings: this.appSettings, artists: this.artists }, '');
 					} catch (error) {
+						vm.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -117,6 +121,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -127,6 +132,8 @@ var vm = new Vue({
 			});
 		},
 		loadAllAlbums: function() {
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data?action=getAlbumsCatalog',
 				type: 'GET',
@@ -137,12 +144,13 @@ var vm = new Vue({
 						clearInterval(albumInfoInterval);
 
 						// this.appSettings.showLeftLogo = false;
-						this.appSettings.showNav = false;
+						this.appSettings.loading = false;
 						this.appSettings.leftPanelView = 'none';
 						this.appSettings.rightPanelView = 'albumsList';
 						this.appSettings.pageTitle = 'Albums';
 						history.pushState({ appSettings: this.appSettings, albums: this.albums }, '');
 					} catch (error) {
+						this.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -152,6 +160,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -162,6 +171,8 @@ var vm = new Vue({
 			});
 		},
 		loadHome: function() {
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data?action=getFeatured',
 				type: 'GET',
@@ -170,11 +181,11 @@ var vm = new Vue({
 						console.log('loadhome test');
 						var result = JSON.parse(result);
 			    		vm.albums = result;
+			    		this.appSettings.loading = false;
 			    		this.appSettings.currentAlbum = 0;
 						this.appSettings.showRightLogo = true;
 						this.appSettings.showLeftLogo = true;
 						this.appSettings.showInfo = false;
-						this.appSettings.showNav = false;
 						this.appSettings.leftPanelView = 'albumCovers';
 						this.appSettings.rightPanelView = 'albums';
 						this.appSettings.pageTitle = 'featured albums';
@@ -187,6 +198,7 @@ var vm = new Vue({
 						
 						scrollToTop();
 					} catch (error) {
+						this.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -196,6 +208,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -207,6 +220,8 @@ var vm = new Vue({
 		},
 		loadAlbum: function(albumID) {
 			console.log('albumID: ' + albumID);
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data?action=getAlbum&albumID=' + albumID,
 				type: 'GET',
@@ -216,10 +231,10 @@ var vm = new Vue({
 						result = JSON.parse(result);
 						vm.albums = [result];
 
+						this.appSettings.loading = false;
 						this.appSettings.showRightLogo = false;
 						this.appSettings.showLeftLogo = false;
 						this.appSettings.showInfo = true;
-						this.appSettings.showNav = false;
 						this.appSettings.leftPanelView = 'albumCovers';
 						this.appSettings.rightPanelView = 'albums';
 						//vm.appSettings.showAlbums = true;
@@ -230,6 +245,7 @@ var vm = new Vue({
 						albumInfoInterval =  setInterval(albumInfoScroll, 200);
 						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
 					} catch (error) {
+						this.appSettings.loading = false;
 						this.errors.errorCode = error.name;
 						this.appSettings.pageTitle = 'error';
 						this.appSettings.leftPanelView = 'none';
@@ -239,6 +255,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = false;
 					this.errors.errorCode = error.name;
 					this.appSettings.pageTitle = 'error';
 					this.appSettings.leftPanelView = 'none';
@@ -250,6 +267,8 @@ var vm = new Vue({
 		},
 		loadArtistCatalog: function(artistID) {
 			console.log(artistID);
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data?action=getArtistCatalog&artistID=' + artistID,
 				type: 'GET',
@@ -258,10 +277,10 @@ var vm = new Vue({
 						result = JSON.parse(result);
 						this.albums = result;
 
+						this.appSettings.loading = false;
 						this.appSettings.showRightLogo = false;
 						this.appSettings.showLeftLogo = false; //causing errors with album info scroll functions
 						this.appSettings.showInfo = false;
-						this.appSettings.showNav = false;
 						this.appSettings.leftPanelView = 'albumCovers';
 						this.appSettings.rightPanelView = 'albums';
 						//vm.appSettings.showAlbums = true;
@@ -271,6 +290,7 @@ var vm = new Vue({
 						albumInfoInterval =  setInterval(albumInfoScroll, 200);
 						history.pushState({ appSettings: vm.appSettings, albums: vm.albums }, '');
 					} catch (error) {
+						this.appSettings.loading = true;
 						this.errors.errorCode = error.name;
 						this.appSettings.pageTitle = 'error';
 						this.appSettings.leftPanelView = 'none';
@@ -280,6 +300,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = true;
 					this.errors.errorCode = error.name;
 					this.appSettings.pageTitle = 'error';
 					this.appSettings.leftPanelView = 'none';
@@ -340,6 +361,8 @@ var vm = new Vue({
 			history.pushState({ appSettings: this.appSettings }, '');
 		},
 		loadRandomAlbum: function() {
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data?action=getRandom',
 				type: 'GET',
@@ -347,16 +370,18 @@ var vm = new Vue({
 					try {
 						var result = JSON.parse(result);
 			    		vm.albums = [result];
+
+			    		this.appSettings.loading = false;
 			    		this.appSettings.currentAlbum = 0;
 						this.appSettings.showRightLogo = false;
 						this.appSettings.showLeftLogo = false;
 						this.appSettings.showInfo = false;
-						this.appSettings.showNav = false;
 						this.appSettings.leftPanelView = 'albumCovers';
 						this.appSettings.rightPanelView = 'albums';
 						this.appSettings.pageTitle = 'random album';
 						history.pushState({ appSettings: this.appSettings, albums: this.albums, artists: this.artists }, '');
 					} catch (error) {
+						this.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -366,6 +391,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -389,6 +415,8 @@ var vm = new Vue({
 				return;
 			}
 
+			this.appSettings.loading = true;
+			this.appSettings.showNav = false;
 			$.ajax({
 				url: 'data/index.php',
 				type: 'POST',
@@ -405,12 +433,13 @@ var vm = new Vue({
 						clearInterval(albumInfoInterval);
 
 						// this.appSettings.showLeftLogo = false;
-						this.appSettings.showNav = false;
+						this.appSettings.loading = false;
 						this.appSettings.leftPanelView = 'none';
 						this.appSettings.rightPanelView = 'searchList';
 						this.appSettings.pageTitle = 'Search result';
 						history.pushState({ appSettings: this.appSettings, albums: this.albums }, '');
 					} catch (error) {
+						this.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -420,6 +449,7 @@ var vm = new Vue({
 					}
 				},
 				error: (error) => {
+					this.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';

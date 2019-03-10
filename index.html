@@ -46,6 +46,11 @@
 						>{{ appSettings.pageTitle }}</div>
 					</transition>
 					<transition name="cart-slide-down" mode="out-in">
+						<div v-if="appSettings.loading" id="user-loading-icon">
+							<img src="images/rstore_icon_loading.png">
+						</div>
+					</transition>
+					<transition name="cart-slide-down" mode="out-in">
 						<div id="user-cart-icon" v-if="customer.cart.length">
 							<img v-if="!appSettings.showNav || mobileSizeCheck()" src="images/rstore_icon_cart.png">
 							<img v-else src="images/rstore_icon_cart_alt.png">
@@ -134,7 +139,7 @@
 										v-bind:key="albums[appSettings.currentAlbum].albumName"
 									>
 										<p id="artist-name" v-on:click="toggleInfo">{{ albums[appSettings.currentAlbum].artistName }}</p>
-										<p id="album-name" v-on:click="toggleInfo">{{ albums[appSettings.currentAlbum].albumName }}<img class="yellow-arrow" src="images/yellow_arrow.png"></p>
+										<p id="album-name" v-on:click="toggleInfo">{{ albums[appSettings.currentAlbum].albumName }}<img v-bind:class="['yellow-arrow', {active: appSettings.showInfo}]" src="images/yellow_arrow.png"></p>
 										<div class="more-info" v-bind:class="{ active: appSettings.showInfo }">
 											<p class="price">{{ formattedPrice }}</p>
 											<button class="cart-button" v-on:click="addToCart">Add to Cart</button>
@@ -260,7 +265,7 @@
 									key="customer-login-cont"
 								>
 									<transition appear name="slide-up-title">
-										<div class="page-title">{{ appSettings.pageTitle }}</div>
+										<div class="page-title inner-title" key="appSettings.pageTitle">{{ appSettings.pageTitle }}</div>
 									</transition>
 									<div id="customer-login-form">
 										<form 
@@ -299,7 +304,7 @@
 									key="customer-create-cont"
 								>
 									<transition appear name="slide-up-title">
-										<div class="page-title">{{ appSettings.pageTitle }}</div>
+										<div class="page-title inner-title" key="appSettings.pageTitle">{{ appSettings.pageTitle }}</div>
 									</transition>
 									<div id="customer-create-form">
 										<form 

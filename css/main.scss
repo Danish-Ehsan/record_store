@@ -171,6 +171,21 @@ MAIN USER BUTTONS
 	align-items: center;
 }
 
+#user-loading-icon {
+	display: inline-block;
+	height: 19px;
+	margin-right: 13px;
+	img {
+		height: 100%;
+		animation: spin 1.5s linear infinite;
+	}
+}
+
+@keyframes spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
 #user-cart-icon {
 	display: inline-block;
 	height: 19px;
@@ -345,7 +360,7 @@ RIGHT PANEL
 .album-info {
 	position: absolute;
 	top: 50%;
-	max-height: 100%;
+	max-height: 80%;
 	overflow: scroll;
 	transform: translateY(-50%);
 	margin-left: 100px;
@@ -373,19 +388,26 @@ RIGHT PANEL
 }
 
 .yellow-arrow {
-	height:35px;
+	height: 35px;
 	margin-left: 10px;
 	margin-bottom: 4px;
 	display: inline;
+	position: relative;
+	transition: all 0.25s ease;
+	left: 0;
+	&.active {
+		transform: rotate(90deg);
+		left: 10px;
+	}
 }
 
 .more-info {
 	margin-top: 20px;
-	max-height: 0px;
+	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.75s;
 	&.active {
-		max-height: 1000px;
+		max-height: 800px;
 	}
 }
 
@@ -415,7 +437,6 @@ RIGHT PANEL
 	list-style-color: $primary-gold;
 	color: $primary-gold;
 	margin-top: 50px;
-	max-height: 450px;
 	overflow: scroll;
 	line-height: 1.5;
 	li:nth-child(even) {
@@ -511,6 +532,9 @@ ARTISTS/ALBUMS LIST PAGE
 	h2 {
 		color: #ffffff;
 	}
+	ul:first-of-type {
+		margin-right: 0;
+	}
 }
 
 #search-artists-list, #search-albums-list, #search-songs-list {
@@ -532,7 +556,16 @@ USER PAGES
 	}
 }
 
+.inner-title {
+	top: 0px;
+}
+
 #right-customer-login {
+	height: 100%;
+}
+
+#customer-login-cont, #customer-create-cont {
+	position: relative;
 	height: 100%;
 }
 
@@ -1007,27 +1040,24 @@ VUE ANIMATION
 
 
 .slide-delay-leave-active {
-	position: relative;
 	left: 0;
 	transition: all 0.2s;
 }
 
 .slide-delay-enter-active {
-	position: relative;
 	left:0;
 	transition: all 0.2s linear 0.5s;
 }
 
 .slide-delay-enter, .slide-delay-leave-to {
-	position: relative;
 	opacity: 0;
 	left: 100px;
 }
 
 
 .slide-up-title-enter, .slide-up-title-leave-to {
-	position: relative;
-	top: 100%;
+	position: absolute;
+	top: 100%; 
 }
 
 
@@ -1124,7 +1154,6 @@ MEDIA QUERIES
 
 	.yellow-arrow {
 		margin-bottom: 0;
-		position: relative;
 		top: 2px;
 	}
 
@@ -1297,6 +1326,16 @@ MEDIA QUERIES
 		&:last-of-type {
 			margin-bottom: 130%;
 		}
+		&.single-album {
+			position: relative;
+			height: 65%;
+			margin-bottom: 0;
+			img {
+				left: 0;
+				right: 0;
+				margin: 0 auto;
+			}
+		}
 	}
 
 
@@ -1358,18 +1397,34 @@ MEDIA QUERIES
 
 	#nav-menu {
 		&.active {
-			width: 170px;
+			width: 200px;
 		}
 		ul {
 			font-size: 24pt;
+			width: 120px;
 			li {
 				padding: 4px 10px;
+				form {
+					width: 100%;
+				}
 			}
 		}
 	}
 
+	#nav-search {
+		width: 75%;
+	}
+
+	#search-submit-btn {
+		width: 25%;
+		margin-top: 0;
+		background-color: $dark-red;
+		background-size: 55%;
+		background-position: 20% 50%;
+	}
+
 	#user-menu-cont {
-		width: 100%;
+		width: 175px;
 		height: 100%;
 		padding: 37px 0 0 0;
 		box-sizing: border-box;
@@ -1449,12 +1504,14 @@ MEDIA QUERIES
 		margin-bottom: 1px;
 	}
 
-	#album-name {
-		img {
-			display: block;
-			margin: 0 auto;
-			transform: rotate(90deg);
-			margin-top: -5px;
+	.yellow-arrow {
+		display: block;
+		margin: 0 auto;
+		transform: rotate(90deg);
+		margin-top: -5px;
+		&.active {
+			transform: rotate(270deg);
+			left: 0;
 		}
 	}
 
@@ -1475,12 +1532,12 @@ MEDIA QUERIES
 	ARTIST/ALBUM LIST
 	------------------------*/
 
-	#right-artists-list, #right-albums-list {
+	#right-artists-list, #right-albums-list, #right-search-list {
 		font-size: 24pt;
 		padding-top: 90px;
 	}
 
-	#artists-lists, #albums-lists {
+	#artist-lists, #albums-lists, #search-lists-cont {
 		width: 75%;
 		ul {
 			width: 100%;

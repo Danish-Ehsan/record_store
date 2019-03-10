@@ -132,6 +132,8 @@ Vue.component('right-customer-login', {
 			var password = $('#login-password').val();
 			console.log('email: ' + email);
 			console.log('password: ' + password);
+
+			vm.appSettings.loading = true;
 			$.ajax({
 				url: 'data/index.php',
 				type: 'POST',
@@ -148,6 +150,7 @@ Vue.component('right-customer-login', {
 							console.log(result);
 							vm.customer.details = result.details;
 							//Vue.set(vm.customer, 'details', result)
+							vm.appSettings.loading = false;
 							if (result.orders) { console.log(result.orders); vm.customer.orders = result.orders; }
 							vm.customer.loggedIn = true;
 							vm.appSettings.rightPanelView = 'customerAccount';
@@ -160,6 +163,7 @@ Vue.component('right-customer-login', {
 
 						console.log(result);
 					} catch (error) {
+						vm.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -169,6 +173,7 @@ Vue.component('right-customer-login', {
 					}
 				},
 				error: (error) => {
+					vm.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -228,6 +233,8 @@ Vue.component('right-customer-login', {
 				}
 			}
 
+
+			vm.appSettings.loading = true;
 			$.ajax({
 				url: 'data/index.php',
 				type: 'POST',
@@ -239,6 +246,7 @@ Vue.component('right-customer-login', {
 					try {
 						console.log('result: ' + result);
 						if (result) {
+							vm.appSettings.loading = false;
 							vm.errors.formErrors.email = true;
 							vm.errors.formErrors.emailMessage = 'This email is already in use.';
 							return;
@@ -266,6 +274,7 @@ Vue.component('right-customer-login', {
 										},
 										success: (result) => {
 											try {
+												vm.appSettings.loading = false;
 												var result = JSON.parse(result);
 												if (!result.incorrectLogin) {
 													console.log(result);
@@ -280,6 +289,7 @@ Vue.component('right-customer-login', {
 
 												console.log(result);
 											} catch (error) {
+												vm.appSettings.loading = false;
 												vm.errors.errorCode = error.name;
 												vm.appSettings.pageTitle = 'error';
 												vm.appSettings.leftPanelView = 'none';
@@ -289,6 +299,7 @@ Vue.component('right-customer-login', {
 											}
 										},
 										error: (error) => {
+											vm.appSettings.loading = false;
 											vm.errors.errorCode = error.name;
 											vm.appSettings.pageTitle = 'error';
 											vm.appSettings.leftPanelView = 'none';
@@ -298,6 +309,7 @@ Vue.component('right-customer-login', {
 										}
 									});
 								} catch (error) {
+									vm.appSettings.loading = false;
 									vm.errors.errorCode = error.name;
 									vm.appSettings.pageTitle = 'error';
 									vm.appSettings.leftPanelView = 'none';
@@ -307,6 +319,7 @@ Vue.component('right-customer-login', {
 								}
 							},
 							error: (error) => {
+								vm.appSettings.loading = false;
 								vm.errors.errorCode = error.name;
 								vm.appSettings.pageTitle = 'error';
 								vm.appSettings.leftPanelView = 'none';
@@ -316,6 +329,7 @@ Vue.component('right-customer-login', {
 							}
 						});
 					} catch (error) {
+						vm.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -325,6 +339,7 @@ Vue.component('right-customer-login', {
 					}
 				},
 				error: (error) => {
+					vm.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -466,6 +481,7 @@ Vue.component('right-customer-account', {
 				}
 			}
 
+			vm.appSettings.loading = true;
 			$.ajax({
 				url: 'data/index.php',
 				type: 'POST',
@@ -490,6 +506,7 @@ Vue.component('right-customer-account', {
 						console.log('result: ' + result);
 						console.log('result error: ' + result.error);
 						var result = JSON.parse(result);
+						vm.appSettings.loading = false;
 						if (!result.errors) {
 							console.log('test');
 							vm.customer.orders.push(result.order);
@@ -501,6 +518,7 @@ Vue.component('right-customer-account', {
 							vm.appSettings.pageTitle = '';
 						}
 					} catch (error) {
+						vm.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -510,6 +528,7 @@ Vue.component('right-customer-account', {
 					}
 				},
 				error: (error) => {
+					vm.appSettings.loading = false;
 					vm.errors.errorCode = error.name;
 					vm.appSettings.pageTitle = 'error';
 					vm.appSettings.leftPanelView = 'none';
@@ -549,6 +568,7 @@ Vue.component('right-customer-account', {
 				vm.errors.formErrors.passwordMessage = 'You must enter the current password.';
 				return;
 			} else {
+				vm.appSettings.loading = true;
 				//check current password
 				$.ajax({
 					url: 'data/index.php',
@@ -561,6 +581,7 @@ Vue.component('right-customer-account', {
 					success: (result) => {
 						try {
 							console.log('result: ' + result);
+							vm.appSettings.loading = false;
 							if (!result) {
 								vm.errors.formErrors.password = true;
 								vm.errors.formErrors.passwordMessage = 'Incorrect Password.';
@@ -571,6 +592,7 @@ Vue.component('right-customer-account', {
 								editCustomerCallback();
 							}
 						} catch (error) {
+							vm.appSettings.loading = false;
 							vm.errors.errorCode = error.name;
 							vm.appSettings.pageTitle = 'error';
 							vm.appSettings.leftPanelView = 'none';
@@ -580,6 +602,7 @@ Vue.component('right-customer-account', {
 						}
 					},
 					error: (error) => {
+						vm.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';
@@ -667,6 +690,8 @@ Vue.component('right-customer-account', {
 						return;
 					}
 				}
+
+				vm.appSettings.loading = true;
 				$.ajax({
 					url: 'data/index.php',
 					type: 'POST',
@@ -688,6 +713,7 @@ Vue.component('right-customer-account', {
 					success: (result) => {
 						try {
 							console.log('result: ' + result);
+							vm.appSettings.loading = false;
 							if (!result.errors) {
 								console.log('customer edit successful');
 								result = JSON.parse(result);
@@ -696,6 +722,7 @@ Vue.component('right-customer-account', {
 								vm.success.successMessage = 'User updated successfully.';
 							}
 						} catch (error) {
+							vm.appSettings.loading = false;
 							vm.errors.errorCode = error.name;
 							vm.appSettings.pageTitle = 'error';
 							vm.appSettings.leftPanelView = 'none';
@@ -705,6 +732,7 @@ Vue.component('right-customer-account', {
 						}
 					},
 					error: (error) => {
+						vm.appSettings.loading = false;
 						vm.errors.errorCode = error.name;
 						vm.appSettings.pageTitle = 'error';
 						vm.appSettings.leftPanelView = 'none';

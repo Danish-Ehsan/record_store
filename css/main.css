@@ -179,6 +179,19 @@ MAIN USER BUTTONS
   display: flex;
   align-items: center; }
 
+#user-loading-icon {
+  display: inline-block;
+  height: 19px;
+  margin-right: 13px; }
+  #user-loading-icon img {
+    height: 100%;
+    animation: spin 1.5s linear infinite; }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
 #user-cart-icon {
   display: inline-block;
   height: 19px;
@@ -319,7 +332,7 @@ RIGHT PANEL
 .album-info {
   position: absolute;
   top: 50%;
-  max-height: 100%;
+  max-height: 80%;
   overflow: scroll;
   transform: translateY(-50%);
   margin-left: 100px;
@@ -346,15 +359,21 @@ RIGHT PANEL
   height: 35px;
   margin-left: 10px;
   margin-bottom: 4px;
-  display: inline; }
+  display: inline;
+  position: relative;
+  transition: all 0.25s ease;
+  left: 0; }
+  .yellow-arrow.active {
+    transform: rotate(90deg);
+    left: 10px; }
 
 .more-info {
   margin-top: 20px;
-  max-height: 0px;
+  max-height: 0;
   overflow: hidden;
   transition: max-height 0.75s; }
   .more-info.active {
-    max-height: 1000px; }
+    max-height: 800px; }
 
 .price {
   color: white;
@@ -380,7 +399,6 @@ RIGHT PANEL
   list-style-color: #f6c115;
   color: #f6c115;
   margin-top: 50px;
-  max-height: 450px;
   overflow: scroll;
   line-height: 1.5; }
   .tracklist li:nth-child(even) {
@@ -455,6 +473,8 @@ ARTISTS/ALBUMS LIST PAGE
 
 #search-lists-cont h2 {
   color: #ffffff; }
+#search-lists-cont ul:first-of-type {
+  margin-right: 0; }
 
 #search-artists-list, #search-albums-list, #search-songs-list {
   margin-bottom: 30px; }
@@ -469,7 +489,14 @@ USER PAGES
   #right-customer-login form, #right-customer-account form {
     font-size: 0pt; }
 
+.inner-title {
+  top: 0px; }
+
 #right-customer-login {
+  height: 100%; }
+
+#customer-login-cont, #customer-create-cont {
+  position: relative;
   height: 100%; }
 
 #customer-login-form, #customer-create-form {
@@ -834,22 +861,19 @@ VUE ANIMATION
   top: 30px; }
 
 .slide-delay-leave-active {
-  position: relative;
   left: 0;
   transition: all 0.2s; }
 
 .slide-delay-enter-active {
-  position: relative;
   left: 0;
   transition: all 0.2s linear 0.5s; }
 
 .slide-delay-enter, .slide-delay-leave-to {
-  position: relative;
   opacity: 0;
   left: 100px; }
 
 .slide-up-title-enter, .slide-up-title-leave-to {
-  position: relative;
+  position: absolute;
   top: 100%; }
 
 /*************************
@@ -909,7 +933,6 @@ MEDIA QUERIES
 
   .yellow-arrow {
     margin-bottom: 0;
-    position: relative;
     top: 2px; }
 
   .tracklist li {
@@ -1039,6 +1062,14 @@ MEDIA QUERIES
       transform: translateY(-50%); }
     .album-image-cont:last-of-type {
       margin-bottom: 130%; }
+    .album-image-cont.single-album {
+      position: relative;
+      height: 65%;
+      margin-bottom: 0; }
+      .album-image-cont.single-album img {
+        left: 0;
+        right: 0;
+        margin: 0 auto; }
 
   /*-----------------------
   USER PANEL
@@ -1088,14 +1119,27 @@ MEDIA QUERIES
     padding: 5px 12px; }
 
   #nav-menu.active {
-    width: 170px; }
+    width: 200px; }
   #nav-menu ul {
-    font-size: 24pt; }
+    font-size: 24pt;
+    width: 120px; }
     #nav-menu ul li {
       padding: 4px 10px; }
+      #nav-menu ul li form {
+        width: 100%; }
+
+  #nav-search {
+    width: 75%; }
+
+  #search-submit-btn {
+    width: 25%;
+    margin-top: 0;
+    background-color: #781922;
+    background-size: 55%;
+    background-position: 20% 50%; }
 
   #user-menu-cont {
-    width: 100%;
+    width: 175px;
     height: 100%;
     padding: 37px 0 0 0;
     box-sizing: border-box;
@@ -1161,11 +1205,14 @@ MEDIA QUERIES
   #artist-name {
     margin-bottom: 1px; }
 
-  #album-name img {
+  .yellow-arrow {
     display: block;
     margin: 0 auto;
     transform: rotate(90deg);
     margin-top: -5px; }
+    .yellow-arrow.active {
+      transform: rotate(270deg);
+      left: 0; }
 
   .more-info {
     margin-bottom: 50px; }
@@ -1179,16 +1226,16 @@ MEDIA QUERIES
   /*-----------------------
   ARTIST/ALBUM LIST
   ------------------------*/
-  #right-artists-list, #right-albums-list {
+  #right-artists-list, #right-albums-list, #right-search-list {
     font-size: 24pt;
     padding-top: 90px; }
 
-  #artists-lists, #albums-lists {
+  #artist-lists, #albums-lists, #search-lists-cont {
     width: 75%; }
-    #artists-lists ul, #albums-lists ul {
+    #artist-lists ul, #albums-lists ul, #search-lists-cont ul {
       width: 100%;
       min-width: 0; }
-      #artists-lists ul li, #albums-lists ul li {
+      #artist-lists ul li, #albums-lists ul li, #search-lists-cont ul li {
         margin: 8px 0; }
 
   /*-----------------------
