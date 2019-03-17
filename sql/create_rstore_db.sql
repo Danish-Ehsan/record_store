@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS record_store_db;
+/*DROP DATABASE IF EXISTS record_store_db;
 CREATE DATABASE record_store_db;
-USE record_store_db;
+USE record_store_db;*/
 
 CREATE TABLE artists (
 	artistID		INT				NOT NULL	AUTO_INCREMENT,
@@ -230,7 +230,10 @@ INSERT INTO adminPermissions (adminID, updateItems, deleteItems, updateAdmins)
 VALUES
 	(1, TRUE, TRUE, TRUE);
 
+
+/*
 GRANT SELECT, INSERT, UPDATE, DELETE
 ON *
 TO danish@localhost
 IDENTIFIED BY 'admin';
+*/
