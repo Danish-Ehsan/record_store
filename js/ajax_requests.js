@@ -7,7 +7,7 @@ $(function() {
 
 				try {
 
-					//console.log('result: ' + result);
+					console.log('result: ' + result);
 
 					var myObj = JSON.parse(result);
 					var cartObj = JSON.parse(result);
